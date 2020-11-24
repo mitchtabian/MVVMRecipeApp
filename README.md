@@ -3,15 +3,16 @@ This course will replace my old java mvvm introduction: [https://codingwithmitch
 
 # Features
 1. Kotlin
-1. MVVM
-1. Jetpack Compose
-1. Flow and State Flow
-1. Hilt
-1. Navigation Components
-1. Retrofit2
-1. Single Activity Architecture
-1. Theming
-1. Fonts
+2. MVVM
+3. Jetpack Compose
+4. Flow and State Flow
+5. Hilt
+6. Navigation Components
+7. Retrofit2
+8. Single Activity Architecture
+9. Pagination
+10. Theming
+11. Fonts
 
 **This is a beginner course.**
 

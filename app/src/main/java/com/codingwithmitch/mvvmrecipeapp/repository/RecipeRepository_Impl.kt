@@ -10,11 +10,11 @@ class RecipeRepository_Impl (
 ): RecipeRepository {
 
     override suspend fun search(query: String, page: String): List<Recipe> {
-        return mapper.fromEntityList(recipeService.search(query = query, page = page))
+        return mapper.fromEntityList(recipeService.search(query = query, page = page).recipes)
     }
 
     override suspend fun find(recipeId: String): Recipe {
-        return mapper.mapFromEntity(recipeService.find(recipeId))
+        return mapper.mapFromEntity(recipeService.find(recipeId).recipe)
     }
 
 }
