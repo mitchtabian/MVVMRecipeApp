@@ -9,6 +9,9 @@ This course will replace my old java mvvm introduction: [https://codingwithmitch
 1. Hilt
 1. Navigation Components
 1. Retrofit2
+1. Single Activity Architecture
+1. Theming
+1. Fonts
 
 **This is a beginner course.**
 

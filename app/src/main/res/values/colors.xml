@@ -7,4 +7,48 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+
+    <color name="blue_300">#FF64B5F6</color>
+    <color name="blue_400">#FF42A5F5</color>
+    <color name="blue_500">#FF2196F3</color>
+    <color name="blue_600">#FF1E88E5</color>
+    <color name="blue_700">#FF1976D2</color>
+    <color name="blue_800">#FF1565C0</color>
+
+    <color name="orange_300">#FFFFB74D</color>
+    <color name="orange_400">#FFFFA726</color>
+    <color name="orange_500">#FFFF9800</color>
+    <color name="orange_600">#FFFB8C00</color>
+    <color name="orange_700">#FFF57C00</color>
+    <color name="orange_800">#FFEF6C00</color>
+
+    <color name="grey_1">#FFF2F2F2</color>
+    <color name="grey_2">#FFE2E2E2</color>
+    <color name="grey_3">#FFD2D2D2</color>
+    <color name="grey_4">#FFC2C2C2</color>
+    <color name="grey_5">#FFB2B2B2</color>
+    <color name="grey_6">#FFA2A2A2</color>
+
+    <color name="grey_dark_1">#FF999999</color>
+    <color name="grey_dark_2">#FF888888</color>
+    <color name="grey_dark_3">#FF777777</color>
+    <color name="grey_dark_4">#FF666666</color>
+    <color name="grey_dark_5">#FF555555</color>
+
+    <color name="black_1">#444444</color>
+    <color name="black_2">#333333</color>
+    <color name="black_3">#222222</color>
+    <color name="black_4">#111111</color>
+    <color name="black_5">#000000</color>
+
+    <color name="teal_1">#2196F3</color>
+
+    <color name="red_dark">#B00020</color>
+    <color name="red_light">#EF5350</color>
+
+    <color name="PURPLE_500">#673AB7</color>
+    <color name="PURPLE_600">#5E35B1</color>
+    <color name="PURPLE_700">#512DA8</color>
+    <color name="PURPLE_800">#4527A0</color>
 </resources>
