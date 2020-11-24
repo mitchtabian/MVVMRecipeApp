@@ -65,8 +65,10 @@ dependencies {
     implementation "androidx.ui:ui-tooling:$compose"
     implementation "androidx.compose.foundation:foundation:$compose"
     implementation "androidx.compose.runtime:runtime-livedata:$compose"
+    implementation "androidx.compose.runtime:runtime-rxjava2:$compose"
     implementation "androidx.compose.material:material:$compose"
     implementation "androidx.compose.material:material-icons-core:$compose"
+    implementation "androidx.compose.material:material-icons-extended:$compose"
 
     def hilt = "2.28-alpha"
     implementation "com.google.dagger:hilt-android:$hilt"

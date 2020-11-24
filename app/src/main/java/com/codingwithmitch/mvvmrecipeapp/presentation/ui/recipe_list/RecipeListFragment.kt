@@ -4,34 +4,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.animation.ColorPropKey
-import androidx.compose.animation.DpPropKey
-import androidx.compose.animation.core.FloatPropKey
-import androidx.compose.animation.core.transitionDefinition
-import androidx.compose.animation.transition
-import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.ScrollableRow
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 
 import androidx.compose.runtime.*
-import androidx.compose.runtime.savedinstancestate.rememberSavedInstanceState
-import androidx.compose.runtime.savedinstancestate.savedInstanceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.drawLayer
 import androidx.compose.ui.focus.ExperimentalFocus
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -42,9 +32,10 @@ import androidx.fragment.app.viewModels
 import com.codingwithmitch.mvvmrecipeapp.R
 import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
 import com.codingwithmitch.mvvmrecipeapp.presentation.BaseApplication
+import com.codingwithmitch.mvvmrecipeapp.presentation.components.FoodCategoryChip
+import com.codingwithmitch.mvvmrecipeapp.presentation.components.RecipeCard
 import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.*
-import com.codingwithmitch.openchat.common.framework.presentation.theme.AppTheme
-import com.codingwithmitch.openchat.common.framework.presentation.theme.Grey4
+import com.codingwithmitch.openchat.common.framework.presentation.theme.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
@@ -81,7 +72,10 @@ class RecipeListFragment: Fragment() {
                     darkTheme = !application.isLight,
                     progressBarIsDisplayed = progressBarState
                 ){
-                    Column {
+                    Column(
+                            modifier = Modifier
+                                    .background(color = if(application.isLight) Grey1 else Black5)
+                    ) {
                         SearchAppBar(
                             query = query,
                             onQueryChanged = viewModel::onQueryChanged,
@@ -181,7 +175,7 @@ fun SearchAppBar(
                     scrollState.scrollTo(categoryScrollPosition)
                     // display FoodChips
                     for (category in categories) {
-                        FoodChip(
+                        FoodCategoryChip(
                             category = category.value,
                             isSelected = selectedCategory == category,
                             onSelectedCategoryChanged = {
@@ -193,56 +187,21 @@ fun SearchAppBar(
                     }
                 }
             }
-
         }
     )
 }
 
 
-@Composable
-fun FoodChip(
-    category: String,
-    isSelected: Boolean = false,
-    onSelectedCategoryChanged: (String) -> Unit,
-    onExecuteSearch: () -> Unit,
-){
-    Surface(
-        modifier = Modifier.padding(end = 8.dp),
-        elevation = 8.dp,
-        shape = MaterialTheme.shapes.large
-    ) {
-        Row(modifier = Modifier
-            .toggleable(
-                value = isSelected,
-                onValueChange = {
-                    onSelectedCategoryChanged(category)
-                    onExecuteSearch()
-                }
-            )
-        ) {
-            Surface(
-                color = if(isSelected) Grey4 else MaterialTheme.colors.primary,
-            ) {
-                Text(
-                    text = category,
-                    style = MaterialTheme.typography.body2,
-                    color = MaterialTheme.colors.onBackground,
-                    modifier = Modifier.padding(8.dp)
-                )
-            }
-        }
-    }
-}
 
+
+@ExperimentalCoroutinesApi
 @Composable
 fun RecipeList(
     recipes: List<Recipe>,
 ){
-    Column() {
+    ScrollableColumn() {
         for(recipe in recipes){
-            recipe.title?.let { title ->
-                Text(title)
-            }
+            RecipeCard(recipe = recipe)
         }
     }
 
