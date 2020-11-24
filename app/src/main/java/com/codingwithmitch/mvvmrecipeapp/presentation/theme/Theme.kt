@@ -4,12 +4,14 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ProvidedValue
+import androidx.compose.runtime.Providers
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.CircularIndeterminateProgressBar
 
 
@@ -47,19 +49,19 @@ fun AppTheme(
         progressBarIsDisplayed: Boolean = false,
         content: @Composable () -> Unit
 ) {
-    MaterialTheme(
-            colors = if (darkTheme) DarkThemeColors else LightThemeColors,
-            typography = QuickSandTypography,
-            shapes = AppShapes
-    ){
-            Box(modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-            ){
-                    content()
-                    CircularIndeterminateProgressBar(isDisplayed = progressBarIsDisplayed, 0.2f)
-            }
-    }
+        MaterialTheme(
+                colors = if (darkTheme) DarkThemeColors else LightThemeColors,
+                typography = QuickSandTypography,
+                shapes = AppShapes,
+        ){
+                Box(modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                ){
+                        content()
+                        CircularIndeterminateProgressBar(isDisplayed = progressBarIsDisplayed, 0.2f)
+                }
+        }
 }
 
 

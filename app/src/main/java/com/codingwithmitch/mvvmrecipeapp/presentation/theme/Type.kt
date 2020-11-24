@@ -1,5 +1,6 @@
 package com.codingwithmitch.openchat.common.framework.presentation.theme
 
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Typography
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
