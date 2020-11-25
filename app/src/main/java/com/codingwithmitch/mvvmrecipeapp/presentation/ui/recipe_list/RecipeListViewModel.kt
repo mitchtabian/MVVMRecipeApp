@@ -75,6 +75,7 @@ constructor(
 
     private suspend fun search(query: String){
         _loading.value = true
+        _recipes.value = ArrayList()
         if(_selectedCategory.value?.value != query) clearSelectedCategory()
         delay(1000) // for testing
         hasExecutedSearch = true

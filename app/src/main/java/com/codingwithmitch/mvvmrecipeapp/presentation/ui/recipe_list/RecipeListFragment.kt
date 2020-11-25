@@ -34,6 +34,7 @@ import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
 import com.codingwithmitch.mvvmrecipeapp.presentation.BaseApplication
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.FoodCategoryChip
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.RecipeCard
+import com.codingwithmitch.mvvmrecipeapp.presentation.components.RecipeListLoading
 import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.*
 import com.codingwithmitch.openchat.common.framework.presentation.theme.*
 import dagger.hilt.android.AndroidEntryPoint
@@ -60,7 +61,7 @@ class RecipeListFragment: Fragment() {
         ).apply {
             findViewById<ComposeView>(R.id.compose_view).setContent {
 
-                val progressBarState by viewModel.loading.collectAsState()
+                val displayProgressBar by viewModel.loading.collectAsState()
 
                 val query by viewModel.query.collectAsState()
 
@@ -68,9 +69,11 @@ class RecipeListFragment: Fragment() {
 
                 val categories = getAllFoodCategories()
 
+                val recipes by viewModel.recipes.collectAsState()
+
                 AppTheme(
                     darkTheme = !application.isLight,
-                    progressBarIsDisplayed = progressBarState
+                    progressBarIsDisplayed = displayProgressBar
                 ){
                     Column(
                             modifier = Modifier
@@ -90,8 +93,12 @@ class RecipeListFragment: Fragment() {
                             onToggleTheme = application::toggleLightTheme,
                         )
 
-                        val recipes by viewModel.recipes.collectAsState()
-                        RecipeList(recipes = recipes)
+                        if(!displayProgressBar){
+                            RecipeList(recipes = recipes)
+                        }
+                        else{
+                            RecipeListLoading()
+                        }
                     }
 
                 }

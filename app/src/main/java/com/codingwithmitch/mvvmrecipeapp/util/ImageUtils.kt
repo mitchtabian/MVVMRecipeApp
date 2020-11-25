@@ -62,27 +62,29 @@ fun loadPicture(url: String, @DrawableRes defaultImage: Int): StateFlow<Bitmap?>
 
 
 
+@ExperimentalCoroutinesApi
 @Composable
-fun loadPicture(drawableId: Int): Bitmap? {
+fun loadPicture(drawableId: Int): StateFlow<Bitmap?> {
 
-    val bitmapState: MutableState<Bitmap?> = mutableStateOf(null)
+    val bitmapState: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
 
+    // get network image
     Glide.with(ContextAmbient.current)
-        .asBitmap()
-        .load(drawableId)
-        .into(object : CustomTarget<Bitmap>() {
+            .asBitmap()
+            .load(drawableId)
+            .into(object : CustomTarget<Bitmap>() {
 
-            override fun onLoadCleared(placeholder: Drawable?) { }
+                override fun onLoadCleared(placeholder: Drawable?) { }
 
-            override fun onResourceReady(
-                resource: Bitmap,
-                transition: Transition<in Bitmap>?
-            ) {
-                bitmapState.value = resource
-            }
-        })
+                override fun onResourceReady(
+                        resource: Bitmap,
+                        transition: Transition<in Bitmap>?
+                ) {
+                    bitmapState.value = resource
+                }
+            })
 
-    return bitmapState.value
+    return bitmapState
 }
 
 
