@@ -1,14 +1,12 @@
 package com.codingwithmitch.mvvmrecipeapp.presentation.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.preferredHeight
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageAsset
 import androidx.compose.ui.layout.ContentScale
@@ -17,6 +15,7 @@ import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
 import com.codingwithmitch.mvvmrecipeapp.util.DEFAULT_RECIPE_IMAGE
 import com.codingwithmitch.mvvmrecipeapp.util.loadPicture
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlin.math.roundToInt
 
 @ExperimentalCoroutinesApi
 @Composable
@@ -52,13 +51,36 @@ fun RecipeCard(
                 }
             }
             recipe.title?.let { title ->
-                Text(
-                        text = title,
+                Row(
                         modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(8.dp),
-                        style = MaterialTheme.typography.h4
-                )
+                                .padding(8.dp)
+                ) {
+                    Text(
+                            text = title,
+                            modifier = Modifier
+                                    .fillMaxWidth(0.85f)
+                            ,
+                            style = MaterialTheme.typography.h3
+                    )
+                    ConstraintLayout(
+                            modifier = Modifier.align(Alignment.CenterVertically)
+                    ) {
+                        val (socialRank) = createRefs()
+                        val rank = recipe.socialRank?.toFloat()?.roundToInt().toString()
+                        Text(
+                                text = rank,
+                                modifier = Modifier
+                                        .constrainAs(socialRank){
+                                            linkTo(top = parent.top, bottom = parent.bottom,)
+                                            end.linkTo(parent.end)
+                                        }
+                                ,
+                                style = MaterialTheme.typography.h5
+                        )
+                    }
+                }
+
             }
         }
 
