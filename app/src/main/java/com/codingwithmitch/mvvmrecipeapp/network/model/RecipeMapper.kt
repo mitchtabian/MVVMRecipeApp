@@ -13,7 +13,6 @@ import java.lang.Exception
 class RecipeMapper : EntityMapper<RecipeEntity, Recipe>{
 
     override fun mapFromEntity(entity: RecipeEntity): Recipe {
-//        Log.d(TAG, "mapFromEntity: ${entity.ingredients}")
         return Recipe(
                 id = entity.pk,
                 title = entity.title,

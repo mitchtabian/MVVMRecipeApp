@@ -10,7 +10,7 @@ class RecipeRepository_Impl (
         private val mapper: RecipeMapper,
 ): RecipeRepository {
 
-    override suspend fun search(token: String, page: String, query: String): List<Recipe> {
+    override suspend fun search(token: String, page: Int, query: String): List<Recipe> {
         return mapper.fromEntityList(recipeService.search(token = token, page = page, query = query).recipes)
     }
 

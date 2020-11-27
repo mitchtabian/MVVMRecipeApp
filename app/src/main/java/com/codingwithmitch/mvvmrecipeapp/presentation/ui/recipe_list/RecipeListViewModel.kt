@@ -33,7 +33,7 @@ constructor(
 
     val loading: StateFlow<Boolean> get() = _loading
 
-    private var _page: String = "1" // Pagination starts at '1' (-1 = exhausted?)
+    private var _page: Int = 1 // Pagination starts at '1' (-1 = exhausted?)
 
     private val _query: MutableStateFlow<String> = MutableStateFlow("")
 
@@ -83,6 +83,11 @@ constructor(
         hasExecutedSearch = true
         onQueryChanged(query)
         val result = repository.search(token = token, page = _page, query = _query.value )
+        if(_page > 1){
+            val current = _recipes.value
+            val new = listOf(current, result).flatten()
+            _recipes.value = new
+        }
         _recipes.value = result
     }
 
@@ -93,7 +98,7 @@ constructor(
     }
 
     private fun incrementPage(){
-        _page = (_page.toInt() + 1).toString()
+        _page += 1
     }
 
     fun onQueryChanged(query: String){
