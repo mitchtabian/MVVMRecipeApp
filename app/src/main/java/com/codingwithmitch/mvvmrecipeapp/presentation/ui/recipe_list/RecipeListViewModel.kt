@@ -1,6 +1,7 @@
 package com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -54,7 +55,7 @@ constructor(
 
      init {
         if(!hasExecutedSearch){
-            onTriggerEvent(SearchEvent())
+            onTriggerEvent(NewSearchEvent())
         }
     }
 
@@ -62,16 +63,16 @@ constructor(
         viewModelScope.launch {
             try {
                 when(event){
-                    is SearchEvent -> {
-                        _page.value = 1
-                        search(_query.value)
+                    is NewSearchEvent -> {
+                        onQueryChanged(event.query)
+                        newSearch()
                     }
                     is NextPageEvent -> {
                         nextPage()
                     }
                 }
             }catch (e: Exception){
-                Log.e(TAG, "launchJob: Exception: ${e}")
+                Log.e(TAG, "launchJob: Exception: ${e}, ${e.cause}")
                 e.printStackTrace()
             }
             finally {
@@ -81,33 +82,35 @@ constructor(
         }
     }
 
-    private suspend fun search(query: String){
+    private suspend fun newSearch(){
         _loading.value = true
-        if(_selectedCategory.value?.value != query) clearSelectedCategory()
+        hasExecutedSearch = true
+        _recipes.value = listOf()
+        _page.value = 1
+        if(_selectedCategory.value?.value != _query.value) clearSelectedCategory()
 
         // just to show pagination, api is fast
         delay(1000)
 
-        hasExecutedSearch = true
-        onQueryChanged(query)
         val result = repository.search(token = token, page = _page.value, query = _query.value )
-        if(_page.value > 1){
-            Log.d(TAG, "search: appending")
-            val current = _recipes.value
-            val new = listOf(current, result).flatten()
-            _recipes.value = new
-        }
-        else{
-            Log.d(TAG, "search: setting new list")
-            _recipes.value = result
-        }
+        _recipes.value = result
     }
 
     private suspend fun nextPage(){
         _loading.value = true
         incrementPage()
-        search(_query.value)
         Log.d(TAG, "nextPage: triggered: ${_page.value}")
+
+        // just to show pagination, api is fast
+        delay(1000)
+
+        if(_page.value > 1){
+            val result = repository.search(token = token, page = _page.value, query = _query.value )
+            Log.d(TAG, "search: appending")
+            val current = _recipes.value
+            val new = listOf(current, result).flatten()
+            _recipes.value = new
+        }
     }
 
     private fun incrementPage(){

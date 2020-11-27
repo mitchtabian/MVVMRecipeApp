@@ -73,17 +73,17 @@ class RecipeListFragment: Fragment() {
 
                 val displayProgressBar by viewModel.loading.collectAsState()
 
-                val query by viewModel.query.collectAsState()
-
                 val selectedCategory by viewModel.selectedCategory.collectAsState()
 
                 val categories = getAllFoodCategories()
 
                 val recipes by viewModel.recipes.collectAsState()
 
+                val query by viewModel.query.collectAsState()
+
                 val page by viewModel.page.collectAsState()
 
-
+                val listState = rememberLazyListState()
 
                 AppTheme(
                     darkTheme = !application.isLight,
@@ -94,19 +94,18 @@ class RecipeListFragment: Fragment() {
                                     .background(color = if(application.isLight) Grey1 else Black5)
                     ) {
                         SearchAppBar(
-                            query = query,
-                            onQueryChanged = viewModel::onQueryChanged,
-                            onExecuteSearch = {
-                                viewModel.onTriggerEvent(SearchEvent())
-                            },
-                            categories = categories,
-                            selectedCategory = selectedCategory,
-                            onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
-                            categoryScrollPosition = viewModel._categoryScrollPosition,
-                            onChangeCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition,
-                            onToggleTheme = application::toggleLightTheme,
+                                query = query,
+                                onQueryChanged = viewModel::onQueryChanged,
+                                onExecuteSearch = {
+                                    viewModel.onTriggerEvent(NewSearchEvent(query))
+                                },
+                                categories = categories,
+                                selectedCategory = selectedCategory,
+                                onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
+                                categoryScrollPosition = viewModel._categoryScrollPosition,
+                                onChangeCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition,
+                                onToggleTheme = application::toggleLightTheme,
                         )
-                        val listState = rememberLazyListState()
                         RecipeList(
                                 recipes = recipes,
                                 listState = listState,
@@ -114,6 +113,7 @@ class RecipeListFragment: Fragment() {
                                 onNextPage = {
                                     viewModel.onTriggerEvent(NextPageEvent())
                                 },
+                                isLoading = displayProgressBar
                         )
                     }
 
@@ -135,6 +135,7 @@ fun RecipeList(
         listState: LazyListState,
         page: Int,
         onNextPage: () -> Unit,
+        isLoading: Boolean = false,
 ){
     LazyColumnForIndexed(
             items = recipes,
@@ -143,7 +144,7 @@ fun RecipeList(
     ) { index, recipe ->
 
         Log.d(TAG, "RecipeList: index: ${index}")
-        if((index + 1) >= (page * PAGE_SIZE)){
+        if((index + 1) >= (page * PAGE_SIZE) && !isLoading){
             onNextPage()
         }
         RecipeCard(recipe = recipe)
@@ -172,17 +173,21 @@ fun SearchAppBar(
                     Row(
                             modifier = Modifier.fillMaxWidth()
                     ) {
+//                        val text = remember{mutableStateOf("")}
                         TextField(
                                 modifier = Modifier
                                         .fillMaxWidth(.9f)
                                         .padding(8.dp),
                                 value = query,
-                                onValueChange = { onQueryChanged(it) },
+                                onValueChange = {
+//                                    text.value = it
+                                    onQueryChanged(it)
+                                                },
                                 label = {
                                     Text(text = "Search")
                                 },
                                 keyboardOptions = KeyboardOptions(
-                                        keyboardType = KeyboardType.Email,
+                                        keyboardType = KeyboardType.Text,
                                         imeAction = ImeAction.Done,
                                 ),
                                 leadingIcon = { Icon(Icons.Filled.Search) },
@@ -209,28 +214,27 @@ fun SearchAppBar(
                                     icon = { Icon(Icons.Filled.MoreVert) },
                             )
                         }
-
                     }
-                    val scrollState = rememberScrollState()
-                    ScrollableRow(
-                            modifier = Modifier.padding(start = 8.dp, bottom = 8.dp),
-                            scrollState = scrollState,
-                    ) {
-                        // restore scroll position after rotation
-                        scrollState.scrollTo(categoryScrollPosition)
-                        // display FoodChips
-                        for (category in categories) {
-                            FoodCategoryChip(
-                                    category = category.value,
-                                    isSelected = selectedCategory == category,
-                                    onSelectedCategoryChanged = {
-                                        onChangeCategoryScrollPosition(scrollState.value)
-                                        onSelectedCategoryChanged(it)
-                                    },
-                                    onExecuteSearch = onExecuteSearch,
-                            )
-                        }
-                    }
+//                    val scrollState = rememberScrollState()
+//                    ScrollableRow(
+//                            modifier = Modifier.padding(start = 8.dp, bottom = 8.dp),
+//                            scrollState = scrollState,
+//                    ) {
+//                        // restore scroll position after rotation
+//                        scrollState.scrollTo(categoryScrollPosition)
+//                        // display FoodChips
+//                        for (category in categories) {
+//                            FoodCategoryChip(
+//                                    category = category.value,
+//                                    isSelected = selectedCategory == category,
+//                                    onSelectedCategoryChanged = {
+//                                        onChangeCategoryScrollPosition(scrollState.value)
+//                                        onSelectedCategoryChanged(it)
+//                                    },
+//                                    onExecuteSearch = onExecuteSearch,
+//                            )
+//                        }
+//                    }
                 }
             }
     )
