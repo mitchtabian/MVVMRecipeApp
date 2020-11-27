@@ -15,7 +15,7 @@ class RecipeRepository_Impl (
     }
 
     override suspend fun get(token: String, id: Int): Recipe {
-        return mapper.mapFromEntity(recipeService.get(token = token, id).recipe)
+        return mapper.mapFromEntity(recipeService.get(token = token, id))
     }
 
 }

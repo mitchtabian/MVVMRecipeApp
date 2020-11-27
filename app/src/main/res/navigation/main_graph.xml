@@ -7,10 +7,12 @@
     <fragment
         android:id="@+id/recipeListFragment"
         android:name="com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListFragment"
-        android:label="RecipeListFragment" >
+        android:label="RecipeListFragment">
         <action
-            android:id="@+id/action_recipeListFragment_to_recipeFragment"
-            app:destination="@id/recipeFragment" />
+            android:id="@+id/viewRecipe"
+            app:destination="@id/recipeFragment">
+
+        </action>
     </fragment>
     <fragment
         android:id="@+id/recipeFragment"

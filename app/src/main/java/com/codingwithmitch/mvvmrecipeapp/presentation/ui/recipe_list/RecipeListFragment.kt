@@ -9,6 +9,7 @@ import androidx.compose.foundation.ScrollableRow
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumnForIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -28,9 +29,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import com.codingwithmitch.mvvmrecipeapp.R
 import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
 import com.codingwithmitch.mvvmrecipeapp.presentation.BaseApplication
+import com.codingwithmitch.mvvmrecipeapp.presentation.components.ErrorToast
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.FoodCategoryChip
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.RecipeCard
 import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.NewSearchEvent
@@ -92,7 +95,7 @@ class RecipeListFragment: Fragment() {
                                 categories = categories,
                                 selectedCategory = selectedCategory,
                                 onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
-                                scrollPosition = viewModel._categoryScrollPosition,
+                                scrollPosition = viewModel.categoryScrollPosition,
                                 onChangeScrollPosition = viewModel::onChangeCategoryScrollPosition,
                                 onToggleTheme = application::toggleLightTheme,
                         )
@@ -102,7 +105,15 @@ class RecipeListFragment: Fragment() {
                                 onNextPage = {
                                     viewModel.onTriggerEvent(NextPageEvent())
                                 },
-                                isLoading = displayProgressBar
+                                isLoading = displayProgressBar,
+                                onSelectRecipe = {
+                                    val bundle = Bundle()
+                                    bundle.putInt("recipeId", it)
+                                    findNavController().navigate(R.id.viewRecipe, bundle)
+                                },
+                                onError = {
+                                    TODO("show error toast somehow")
+                                }
                         )
                     }
 
@@ -111,10 +122,6 @@ class RecipeListFragment: Fragment() {
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-    }
 }
 
 @ExperimentalCoroutinesApi
@@ -124,19 +131,30 @@ fun RecipeList(
         page: Int,
         onNextPage: () -> Unit,
         isLoading: Boolean = false,
+        onSelectRecipe: (Int) -> Unit,
+        onError: (String) -> Unit,
 ){
+    val state = rememberLazyListState()
     LazyColumnForIndexed(
             items = recipes,
-
+            state = state,
     ) { index, recipe ->
-
         Log.d(TAG, "RecipeList: index: ${index}")
         if((index + 1) >= (page * PAGE_SIZE) && !isLoading){
             onNextPage()
         }
-        RecipeCard(recipe = recipe)
+        RecipeCard(
+                recipe = recipe,
+                onClick = {
+                    recipe.id?.let{
+                        onSelectRecipe(it)
+                    }?: onError("Error. There's something wrong with that recipe.")
+                }
+        )
     }
 }
+
+
 
 @ExperimentalFocus
 @Composable
