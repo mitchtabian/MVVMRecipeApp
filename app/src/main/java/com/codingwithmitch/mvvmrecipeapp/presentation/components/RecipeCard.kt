@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageAsset
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
 import com.codingwithmitch.mvvmrecipeapp.util.DEFAULT_RECIPE_IMAGE
 import com.codingwithmitch.mvvmrecipeapp.util.loadPicture
@@ -26,10 +27,8 @@ fun RecipeCard(
             shape = MaterialTheme.shapes.small,
             modifier = Modifier
                     .padding(
-                            bottom = 4.dp,
-                            top = 4.dp,
-                            start = 1.dp,
-                            end = 1.dp
+                            bottom = 6.dp,
+                            top = 6.dp,
                     )
                     .fillMaxWidth()
             ,
@@ -52,42 +51,31 @@ fun RecipeCard(
             }
             recipe.title?.let { title ->
                 Row(
-                        modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp)
-                ) {
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top=12.dp, bottom=12.dp, start = 8.dp, end=8.dp)
+                ){
                     Text(
-                            text = title,
-                            modifier = Modifier
-                                    .fillMaxWidth(0.85f)
-                            ,
-                            style = MaterialTheme.typography.h3
+                        text = title,
+                        modifier = Modifier
+                            .fillMaxWidth(0.85f)
+                            .wrapContentWidth(Alignment.Start)
+                        ,
+                        style = MaterialTheme.typography.h3
                     )
-                    ConstraintLayout(
-                            modifier = Modifier.align(Alignment.CenterVertically)
-                    ) {
-                        val (socialRank) = createRefs()
-                        val rank = recipe.rating.toString()
-                        Text(
-                                text = rank,
-                                modifier = Modifier
-                                        .constrainAs(socialRank){
-                                            linkTo(top = parent.top, bottom = parent.bottom,)
-                                            end.linkTo(parent.end)
-                                        }
-                                ,
-                                style = MaterialTheme.typography.h5
-                        )
-                    }
+                    val rank = recipe.rating.toString()
+                    Text(
+                        text = rank,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentWidth(Alignment.End)
+                            .align(Alignment.CenterVertically)
+                        ,
+                        style = MaterialTheme.typography.h5
+                    )
                 }
-
             }
         }
-
-
-
-
-
     }
 }
 

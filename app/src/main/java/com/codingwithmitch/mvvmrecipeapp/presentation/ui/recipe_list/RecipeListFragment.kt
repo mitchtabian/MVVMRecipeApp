@@ -43,7 +43,6 @@ import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
 import com.codingwithmitch.mvvmrecipeapp.presentation.BaseApplication
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.FoodCategoryChip
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.RecipeCard
-import com.codingwithmitch.mvvmrecipeapp.presentation.components.RecipeListLoading
 import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.*
 import com.codingwithmitch.mvvmrecipeapp.util.TAG
 import com.codingwithmitch.openchat.common.framework.presentation.theme.*
