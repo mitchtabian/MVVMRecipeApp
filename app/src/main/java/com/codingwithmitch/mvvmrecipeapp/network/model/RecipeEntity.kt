@@ -30,7 +30,7 @@ class RecipeEntity(
     var cookingInstructions: String? = null,
 
     @SerializedName("ingredients")
-    var ingredients: JsonObject? = null,
+    var ingredients: List<String>? = null,
 
     @SerializedName("date_added")
     var dateAdded: String? = null,

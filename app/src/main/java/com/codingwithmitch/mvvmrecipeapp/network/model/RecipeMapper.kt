@@ -1,13 +1,7 @@
 package com.codingwithmitch.mvvmrecipeapp.network.model
 
-import android.util.Log
 import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
 import com.codingwithmitch.mvvmrecipeapp.util.EntityMapper
-import com.codingwithmitch.mvvmrecipeapp.util.TAG
-import com.google.gson.JsonObject
-import com.google.gson.JsonParseException
-import org.json.JSONObject
-import java.lang.Exception
 
 
 class RecipeMapper : EntityMapper<RecipeEntity, Recipe>{
@@ -22,7 +16,7 @@ class RecipeMapper : EntityMapper<RecipeEntity, Recipe>{
                 sourceUrl = entity.sourceUrl,
                 description = entity.description,
                 cookingInstructions = entity.cookingInstructions,
-                ingredients = mapIngredientFromEntity(entity.ingredients),
+                ingredients = entity.ingredients,
                 dateAdded = entity.dateAdded,
                 dateUpdated = entity.dateUpdated,
         )
@@ -38,7 +32,7 @@ class RecipeMapper : EntityMapper<RecipeEntity, Recipe>{
                 sourceUrl = domainModel.sourceUrl,
                 description = domainModel.description,
                 cookingInstructions = domainModel.cookingInstructions,
-                ingredients = null, // don't care we do not publish any recipes
+                ingredients = domainModel.ingredients,
                 dateAdded = domainModel.dateAdded,
                 dateUpdated = domainModel.dateUpdated,
         )
@@ -52,35 +46,6 @@ class RecipeMapper : EntityMapper<RecipeEntity, Recipe>{
         return initial.map { mapToEntity(it) }
     }
 
-    /**
-     * Example Json data
-     * {
-     *  'Butter': '1 Cup',
-     *  'Carrot': '6',
-     *  '250 ml Milk': null
-     * }
-     *
-     * Will map to List<String>:
-     * [
-     *  'Butter: 1 Cup', 'Carrot: 6', '250 ml Milk',
-     * ]
-     *
-     *
-     */
-    fun mapIngredientFromEntity(jsonObject: JsonObject?): List<String>{
-        val list: ArrayList<String> = ArrayList()
-        if(jsonObject != null){
-            for(key in jsonObject.keySet()){
-                var ingredient = key
-                // Most ingredients are not formatted properly from the initial data set
-                if(jsonObject[key].toString() != "null"){
-                    ingredient = key + ": " +jsonObject[key].toString()
-                }
-                list.add(ingredient)
-            }
-        }
-        return list
-    }
 
 }
 
