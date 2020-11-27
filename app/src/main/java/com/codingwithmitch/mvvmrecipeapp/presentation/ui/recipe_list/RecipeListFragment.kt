@@ -11,6 +11,7 @@ import androidx.compose.foundation.gestures.rememberScrollableController
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumnFor
+import androidx.compose.foundation.lazy.LazyColumnForIndexed
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -80,6 +81,10 @@ class RecipeListFragment: Fragment() {
 
                 val recipes by viewModel.recipes.collectAsState()
 
+                val page by viewModel.page.collectAsState()
+
+
+
                 AppTheme(
                     darkTheme = !application.isLight,
                     progressBarIsDisplayed = displayProgressBar
@@ -101,13 +106,15 @@ class RecipeListFragment: Fragment() {
                             onChangeCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition,
                             onToggleTheme = application::toggleLightTheme,
                         )
-
-                        if(!displayProgressBar){
-                            RecipeList(recipes = recipes)
-                        }
-                        else{
-                            RecipeListLoading()
-                        }
+                        val listState = rememberLazyListState()
+                        RecipeList(
+                                recipes = recipes,
+                                listState = listState,
+                                page = page,
+                                onNextPage = {
+                                    viewModel.onTriggerEvent(NextPageEvent())
+                                },
+                        )
                     }
 
                 }
@@ -118,6 +125,28 @@ class RecipeListFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+    }
+}
+
+@ExperimentalCoroutinesApi
+@Composable
+fun RecipeList(
+        recipes: List<Recipe>,
+        listState: LazyListState,
+        page: Int,
+        onNextPage: () -> Unit,
+){
+    LazyColumnForIndexed(
+            items = recipes,
+            state = listState,
+
+    ) { index, recipe ->
+
+        Log.d(TAG, "RecipeList: index: ${index}")
+        if((index + 1) >= (page * PAGE_SIZE)){
+            onNextPage()
+        }
+        RecipeCard(recipe = recipe)
     }
 }
 
@@ -158,10 +187,10 @@ fun SearchAppBar(
                                 ),
                                 leadingIcon = { Icon(Icons.Filled.Search) },
                                 onImeActionPerformed = { action, softKeyboardController ->
-                                    if (action == ImeAction.Next || action == ImeAction.Done) {
+                                    if (action == ImeAction.Done) {
+                                        onExecuteSearch()
                                         softKeyboardController?.hideSoftwareKeyboard()
                                     }
-                                    onExecuteSearch()
                                 },
                                 textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
                                 backgroundColor = MaterialTheme.colors.surface
@@ -210,68 +239,7 @@ fun SearchAppBar(
 
 
 
-@ExperimentalCoroutinesApi
-@Composable
-fun RecipeList(
-    recipes: List<Recipe>,
-){
 
-    // actual composable state
-    val offset = remember { mutableStateOf(0f) }
-
-    val interactionState = InteractionState()
-    Log.d(TAG, "RecipeList: interaction state: ${interactionState}")
-    interactionState.addInteraction(Interaction.Dragged)
-    val scrollableController = rememberScrollableController(
-            consumeScrollDelta = { delta ->
-                Log.d(TAG, "RecipeList: scrolling: ${delta}")
-                offset.value = offset.value + delta
-                delta
-            },
-            interactionState = interactionState
-    )
-//    val state = rememberLazyListState(
-////            interactionState = interactionState
-//    )
-    val state = rememberScrollState(
-            interactionState = interactionState
-    )
-    Log.d(TAG, "RecipeList: state: ${state}")
-    LazyColumnFor(
-            items = recipes,
-            modifier = Modifier
-                    .scrollable(
-                            orientation = Orientation.Vertical,
-                            controller = scrollableController,
-                            canScroll = { true },
-                            enabled = true,
-                            reverseDirection = true,
-                            onScrollStarted = {
-                                Log.d(TAG, "RecipeList: started.")
-                            },
-                            onScrollStopped = {
-                                Log.d(TAG, "RecipeList: stopped")
-                            },
-
-                    ),
-    ) { recipe ->
-        RecipeCard(recipe = recipe)
-    }
-//    ScrollableColumn(
-//            modifier = Modifier
-//                    .scrollable(
-//                            orientation = Orientation.Vertical,
-//                            controller = scrollableController,
-//                            canScroll = {true},
-//                            enabled = true,
-//                    )
-//    ) {
-//        for(recipe in recipes){
-//            RecipeCard(recipe = recipe)
-//        }
-//    }
-
-}
 
 
 

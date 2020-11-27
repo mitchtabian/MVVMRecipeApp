@@ -17,6 +17,8 @@ import kotlinx.coroutines.launch
 import java.lang.Exception
 import javax.inject.Named
 
+const val PAGE_SIZE = 30
+
 @ExperimentalCoroutinesApi
 class RecipeListViewModel
 @ViewModelInject
@@ -33,7 +35,10 @@ constructor(
 
     val loading: StateFlow<Boolean> get() = _loading
 
-    private var _page: Int = 1 // Pagination starts at '1' (-1 = exhausted?)
+    // Pagination starts at '1' (-1 = exhausted?)
+    private val _page: MutableStateFlow<Int> = MutableStateFlow(1)
+
+    val page: StateFlow<Int> get() = _page
 
     private val _query: MutableStateFlow<String> = MutableStateFlow("")
 
@@ -47,7 +52,7 @@ constructor(
 
     var _categoryScrollPosition: Float = 0f
 
-    init {
+     init {
         if(!hasExecutedSearch){
             onTriggerEvent(SearchEvent())
         }
@@ -58,6 +63,7 @@ constructor(
             try {
                 when(event){
                     is SearchEvent -> {
+                        _page.value = 1
                         search(_query.value)
                     }
                     is NextPageEvent -> {
@@ -77,28 +83,35 @@ constructor(
 
     private suspend fun search(query: String){
         _loading.value = true
-        _recipes.value = ArrayList()
         if(_selectedCategory.value?.value != query) clearSelectedCategory()
-        delay(1000) // for testing
+
+        // just to show pagination, api is fast
+        delay(1000)
+
         hasExecutedSearch = true
         onQueryChanged(query)
-        val result = repository.search(token = token, page = _page, query = _query.value )
-        if(_page > 1){
+        val result = repository.search(token = token, page = _page.value, query = _query.value )
+        if(_page.value > 1){
+            Log.d(TAG, "search: appending")
             val current = _recipes.value
             val new = listOf(current, result).flatten()
             _recipes.value = new
         }
-        _recipes.value = result
+        else{
+            Log.d(TAG, "search: setting new list")
+            _recipes.value = result
+        }
     }
 
     private suspend fun nextPage(){
         _loading.value = true
         incrementPage()
         search(_query.value)
+        Log.d(TAG, "nextPage: triggered: ${_page.value}")
     }
 
     private fun incrementPage(){
-        _page += 1
+        _page.value += 1
     }
 
     fun onQueryChanged(query: String){
