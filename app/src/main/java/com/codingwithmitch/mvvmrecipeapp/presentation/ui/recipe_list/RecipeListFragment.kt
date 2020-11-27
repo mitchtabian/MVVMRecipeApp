@@ -86,8 +86,8 @@ class RecipeListFragment: Fragment() {
                 val listState = rememberLazyListState()
 
                 AppTheme(
-                    darkTheme = !application.isLight,
-                    progressBarIsDisplayed = displayProgressBar
+                        darkTheme = !application.isLight,
+                        progressBarIsDisplayed = displayProgressBar,
                 ){
                     Column(
                             modifier = Modifier

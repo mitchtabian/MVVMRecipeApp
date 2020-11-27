@@ -1,5 +1,6 @@
 package com.codingwithmitch.openchat.common.framework.presentation.theme
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -12,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.codingwithmitch.mvvmrecipeapp.presentation.BaseApplication
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.CircularIndeterminateProgressBar
 
 
@@ -47,7 +49,7 @@ private val DarkThemeColors = darkColors(
 fun AppTheme(
         darkTheme: Boolean = isSystemInDarkTheme(),
         progressBarIsDisplayed: Boolean = false,
-        content: @Composable () -> Unit
+        content: @Composable () -> Unit,
 ) {
         MaterialTheme(
                 colors = if (darkTheme) DarkThemeColors else LightThemeColors,
@@ -57,6 +59,7 @@ fun AppTheme(
                 Box(modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxHeight()
+                        .background(color = if(!darkTheme) Grey1 else Black5)
                 ){
                         content()
                         CircularIndeterminateProgressBar(isDisplayed = progressBarIsDisplayed, 0.2f)
