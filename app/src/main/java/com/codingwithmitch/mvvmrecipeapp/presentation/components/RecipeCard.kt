@@ -37,7 +37,7 @@ fun RecipeCard(
     ) {
 
         Column() {
-            recipe.imageUrl?.let { url ->
+            recipe.featuredImage?.let { url ->
                 val image by loadPicture(url = url, defaultImage = DEFAULT_RECIPE_IMAGE).collectAsState()
                 image?.let { img ->
                     Image(
@@ -67,7 +67,7 @@ fun RecipeCard(
                             modifier = Modifier.align(Alignment.CenterVertically)
                     ) {
                         val (socialRank) = createRefs()
-                        val rank = recipe.socialRank?.toFloat()?.roundToInt().toString()
+                        val rank = recipe.rating.toString()
                         Text(
                                 text = rank,
                                 modifier = Modifier

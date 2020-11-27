@@ -8,7 +8,7 @@ class RecipeSearchResponse(
     @SerializedName("count")
     var count: Int,
 
-    @SerializedName("recipes")
+    @SerializedName("results")
     var recipes: List<RecipeEntity>,
 )
 

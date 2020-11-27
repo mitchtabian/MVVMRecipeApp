@@ -5,9 +5,9 @@ import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
 
 interface RecipeRepository {
 
-    suspend fun search(query: String, page: String): List<Recipe>
+    suspend fun search(token: String, page: String, query: String): List<Recipe>
 
-    suspend fun find(recipeId: String): Recipe
+    suspend fun get(token: String, id: Int): Recipe
 
 }
 

@@ -1,28 +1,52 @@
 package com.codingwithmitch.mvvmrecipeapp.network.model
 
+import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
 
 class RecipeEntity(
 
-    @SerializedName("recipe_id")
-    var recipeId: String? = null,
+    @SerializedName("pk")
+    var pk: Int? = null,
 
     @SerializedName("title")
     var title: String? = null,
 
-    @SerializedName("image_url")
-    var imageUrl: String? = null,
-
-    @SerializedName("social_rank")
-    var socialRank: Float = 0f,
-
     @SerializedName("publisher")
     var publisher: String? = null,
 
-    @SerializedName("publisher_url")
-    var publisherUrl: String? = null,
+    @SerializedName("featured_image")
+    var featuredImage: String? = null,
+
+    @SerializedName("rating")
+    var rating: Int? = 0,
 
     @SerializedName("source_url")
     var sourceUrl: String? = null,
+
+    @SerializedName("description")
+    var description: String? = null,
+
+    @SerializedName("cooking_instructions")
+    var cookingInstructions: String? = null,
+
+    @SerializedName("ingredients")
+    var ingredients: JsonObject? = null,
+
+    @SerializedName("date_added")
+    var dateAdded: String? = null,
+
+    @SerializedName("date_updated")
+    var dateUpdated: String? = null,
 )
+
+
+
+
+
+
+
+
+
+
+
 

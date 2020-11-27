@@ -15,12 +15,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import javax.inject.Named
 
 @ExperimentalCoroutinesApi
 class RecipeListViewModel
 @ViewModelInject
 constructor(
-    private val repository: RecipeRepository,
+        private val repository: RecipeRepository,
+        private @Named("auth_token") val token: String,
 ): ViewModel(){
 
     private val _recipes: MutableStateFlow<List<Recipe>> = MutableStateFlow(ArrayList())
@@ -80,7 +82,7 @@ constructor(
         delay(1000) // for testing
         hasExecutedSearch = true
         onQueryChanged(query)
-        val result = repository.search(_query.value, _page)
+        val result = repository.search(token = token, page = _page, query = _query.value )
         _recipes.value = result
     }
 

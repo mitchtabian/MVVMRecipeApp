@@ -3,18 +3,19 @@ package com.codingwithmitch.mvvmrecipeapp.repository
 import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
 import com.codingwithmitch.mvvmrecipeapp.network.RecipeService
 import com.codingwithmitch.mvvmrecipeapp.network.model.RecipeMapper
+import javax.inject.Named
 
 class RecipeRepository_Impl (
-    private val recipeService: RecipeService,
-    private val mapper: RecipeMapper,
+        private val recipeService: RecipeService,
+        private val mapper: RecipeMapper,
 ): RecipeRepository {
 
-    override suspend fun search(query: String, page: String): List<Recipe> {
-        return mapper.fromEntityList(recipeService.search(query = query, page = page).recipes)
+    override suspend fun search(token: String, page: String, query: String): List<Recipe> {
+        return mapper.fromEntityList(recipeService.search(token = token, page = page, query = query).recipes)
     }
 
-    override suspend fun find(recipeId: String): Recipe {
-        return mapper.mapFromEntity(recipeService.find(recipeId).recipe)
+    override suspend fun get(token: String, id: Int): Recipe {
+        return mapper.mapFromEntity(recipeService.get(token = token, id).recipe)
     }
 
 }
