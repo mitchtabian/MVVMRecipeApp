@@ -64,7 +64,6 @@ constructor(
             try {
                 when(event){
                     is NewSearchEvent -> {
-                        onQueryChanged(event.query)
                         newSearch()
                     }
                     is NextPageEvent -> {
@@ -85,9 +84,9 @@ constructor(
     private suspend fun newSearch(){
         _loading.value = true
         hasExecutedSearch = true
-        _recipes.value = listOf()
-        _page.value = 1
-        if(_selectedCategory.value?.value != _query.value) clearSelectedCategory()
+
+        // New search. Reset the state
+        resetSearchState()
 
         // just to show pagination, api is fast
         delay(1000)
@@ -107,16 +106,36 @@ constructor(
         if(_page.value > 1){
             val result = repository.search(token = token, page = _page.value, query = _query.value )
             Log.d(TAG, "search: appending")
-            val current = _recipes.value
-            val new = listOf(current, result).flatten()
-            _recipes.value = new
+            appendRecipes(result)
         }
+    }
+
+    /**
+     * Called when a new search is executed.
+     */
+    private fun resetSearchState(){
+        _recipes.value = listOf()
+        _page.value = 1
+        if(_selectedCategory.value?.value != _query.value) clearSelectedCategory()
+
+    }
+
+    /**
+     * Append new recipes to the current list of recipes
+     */
+    private fun appendRecipes(recipes: List<Recipe>){
+        val current = _recipes.value
+        val new = listOf(current, recipes).flatten()
+        _recipes.value = new
     }
 
     private fun incrementPage(){
         _page.value += 1
     }
 
+    /**
+     * Keep track of what the user has searched
+     */
     fun onQueryChanged(query: String){
         _query.value = query
     }
@@ -131,9 +150,11 @@ constructor(
         onQueryChanged(category)
     }
 
+
     fun onChangeCategoryScrollPosition(position: Float){
         _categoryScrollPosition = position
     }
+
 
 }
 
