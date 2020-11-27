@@ -1,13 +1,12 @@
 package com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
-import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list.FoodCategory.*
-import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.*
+import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.NewSearchEvent
+import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.NextPageEvent
 import com.codingwithmitch.mvvmrecipeapp.repository.RecipeRepository
 import com.codingwithmitch.mvvmrecipeapp.util.TAG
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -15,7 +14,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import javax.inject.Named
 
 const val PAGE_SIZE = 30
