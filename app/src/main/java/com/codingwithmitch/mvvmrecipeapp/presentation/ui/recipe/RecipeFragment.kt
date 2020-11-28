@@ -67,7 +67,7 @@ class RecipeFragment: Fragment() {
                 ){
                     recipe?.let {
                         RecipeView(recipe = it)
-                    }?: Text("LOADING")
+                    }
                 }
             }
         }
@@ -143,7 +143,6 @@ fun RecipeView(
                             style = MaterialTheme.typography.caption
                     )
                 }
-                recipe.description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s."
                 recipe.description?.let { description ->
                     if(description != "N/A"){
                         Text(
