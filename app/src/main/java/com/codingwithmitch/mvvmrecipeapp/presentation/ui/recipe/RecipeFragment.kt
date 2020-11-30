@@ -12,6 +12,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageAsset
@@ -24,6 +25,7 @@ import com.codingwithmitch.mvvmrecipeapp.R
 import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
 import com.codingwithmitch.mvvmrecipeapp.presentation.BaseApplication
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.AnimatedHeartButton
+import com.codingwithmitch.mvvmrecipeapp.presentation.components.HeartButtonState
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.LoadingRecipeShimmer
 import com.codingwithmitch.mvvmrecipeapp.util.DEFAULT_RECIPE_IMAGE
 import com.codingwithmitch.mvvmrecipeapp.util.loadPicture
@@ -124,7 +126,7 @@ fun RecipeView(
                                 modifier = Modifier
                                         .align(Alignment.CenterVertically)
                                 ,
-                                isActive = isFavorite,
+                                buttonState = mutableStateOf(if(isFavorite) HeartButtonState.ACTIVE else HeartButtonState.IDLE),
                                 onToggle = onToggleFavorite,
                                 iconSize = 24.dp,
                                 expandIconSize = 36.dp
