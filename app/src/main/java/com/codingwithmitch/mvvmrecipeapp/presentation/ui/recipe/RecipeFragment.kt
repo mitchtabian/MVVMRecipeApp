@@ -23,13 +23,16 @@ import androidx.fragment.app.viewModels
 import com.codingwithmitch.mvvmrecipeapp.R
 import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
 import com.codingwithmitch.mvvmrecipeapp.presentation.BaseApplication
-import com.codingwithmitch.mvvmrecipeapp.presentation.components.RecipeCard
+import com.codingwithmitch.mvvmrecipeapp.presentation.components.AnimatedHeartButton
+import com.codingwithmitch.mvvmrecipeapp.presentation.components.LoadingRecipeShimmer
 import com.codingwithmitch.mvvmrecipeapp.util.DEFAULT_RECIPE_IMAGE
 import com.codingwithmitch.mvvmrecipeapp.util.loadPicture
 import com.codingwithmitch.openchat.common.framework.presentation.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
+
+const val IMAGE_HEIGHT = 260
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
@@ -61,13 +64,21 @@ class RecipeFragment: Fragment() {
 
                 val recipe by viewModel.recipe.collectAsState()
 
+                val isFavorite by viewModel.isFavorite.collectAsState()
+
                 AppTheme(
                     darkTheme = !application.isLight,
                     progressBarIsDisplayed = displayProgressBar,
                 ){
-                    recipe?.let {
-                        RecipeView(recipe = it)
+                    if (displayProgressBar && recipe == null) LoadingRecipeShimmer(IMAGE_HEIGHT)
+                    else recipe?.let {
+                        RecipeView(
+                                recipe = it,
+                                isFavorite = isFavorite,
+                                onToggleFavorite = viewModel::onToggleFavorite,
+                        )
                     }
+//                    LoadingRecipeShimmer(IMAGE_HEIGHT)
                 }
             }
         }
@@ -78,6 +89,8 @@ class RecipeFragment: Fragment() {
 @Composable
 fun RecipeView(
         recipe: Recipe,
+        isFavorite: Boolean,
+        onToggleFavorite: () -> Unit,
 ){
     ScrollableColumn(
             modifier = Modifier
@@ -90,7 +103,7 @@ fun RecipeView(
                         asset = img.asImageAsset(),
                         modifier = Modifier
                                 .fillMaxWidth()
-                                .preferredHeight(260.dp)
+                                .preferredHeight(IMAGE_HEIGHT.dp)
                         ,
                         contentScale = ContentScale.Crop,
                 )
@@ -100,6 +113,41 @@ fun RecipeView(
                             .fillMaxWidth()
                             .padding(8.dp)
             ) {
+                recipe.publisher?.let { publisher ->
+                    Row(
+                            modifier = Modifier
+                                    .height(40.dp)
+                                    .fillMaxWidth()
+                                    .padding(bottom = 8.dp)
+                    ){
+                        AnimatedHeartButton(
+                                modifier = Modifier
+                                        .align(Alignment.CenterVertically)
+                                ,
+                                isActive = isFavorite,
+                                onToggle = onToggleFavorite,
+                                iconSize = 24.dp,
+                                expandIconSize = 36.dp
+                        )
+                        Spacer(modifier = Modifier.padding(end = 15.dp))
+                        val updated = recipe.dateUpdated
+                        Text(
+                                text = if(updated != null) {
+                                    "Updated ${updated} by ${publisher}"
+                                }
+                                else {
+                                    "By ${publisher}"
+                                }
+                                ,
+                                modifier = Modifier
+                                        .fillMaxWidth()
+                                        .align(Alignment.CenterVertically)
+                                ,
+                                style = MaterialTheme.typography.caption
+                        )
+                    }
+
+                }
                 recipe.title?.let { title ->
                     Row(
                             modifier = Modifier
@@ -125,23 +173,6 @@ fun RecipeView(
                                 style = MaterialTheme.typography.h5
                         )
                     }
-                }
-                recipe.publisher?.let { publisher ->
-                    val updated = recipe.dateUpdated
-                    Text(
-                            text = if(updated != null) {
-                                "Updated ${updated} by ${publisher}"
-                            }
-                            else {
-                                "By ${publisher}"
-                            }
-                            ,
-                            modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = 8.dp)
-                            ,
-                            style = MaterialTheme.typography.caption
-                    )
                 }
                 recipe.description?.let { description ->
                     if(description != "N/A"){

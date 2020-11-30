@@ -5,8 +5,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
-import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe.RecipeEvent.*
-import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent
+import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe.RecipeEvent.GetRecipeEvent
 import com.codingwithmitch.mvvmrecipeapp.repository.RecipeRepository
 import com.codingwithmitch.mvvmrecipeapp.util.TAG
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -32,8 +31,16 @@ constructor(
 
     val loading: StateFlow<Boolean> get() = _loading
 
+    private val _isFavorite: MutableStateFlow<Boolean> = MutableStateFlow(false)
+
+    val isFavorite: StateFlow<Boolean> get() = _isFavorite
+
     // has the recipe been loaded?
     var hasLoaded: Boolean = false
+
+    fun onToggleFavorite(){
+        _isFavorite.value = !_isFavorite.value
+    }
 
     fun onTriggerEvent(event: RecipeEvent){
         viewModelScope.launch {
@@ -59,7 +66,7 @@ constructor(
         hasLoaded = true
 
         // simulate a delay to show loading
-        delay(500)
+        delay(1000)
 
         val recipe = recipeRepository.get(token=token, id=id)
         _recipe.value = recipe

@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.ScrollableRow
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -34,7 +33,9 @@ import androidx.navigation.findNavController
 import com.codingwithmitch.mvvmrecipeapp.R
 import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
 import com.codingwithmitch.mvvmrecipeapp.presentation.BaseApplication
-import com.codingwithmitch.mvvmrecipeapp.presentation.components.*
+import com.codingwithmitch.mvvmrecipeapp.presentation.components.FoodCategoryChip
+import com.codingwithmitch.mvvmrecipeapp.presentation.components.LoadingRecipeListShimmer
+import com.codingwithmitch.mvvmrecipeapp.presentation.components.RecipeCard
 import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.NewSearchEvent
 import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.NextPageEvent
 import com.codingwithmitch.mvvmrecipeapp.util.TAG
@@ -98,7 +99,7 @@ class RecipeListFragment: Fragment() {
                                 onChangeScrollPosition = viewModel::onChangeCategoryScrollPosition,
                                 onToggleTheme = application::toggleLightTheme,
                         )
-                        if (displayProgressBar && recipes.isEmpty()) LoadingListShimmer()
+                        if (displayProgressBar && recipes.isEmpty()) LoadingRecipeListShimmer()
                         else RecipeList(
                                 recipes = recipes,
                                 page = page,
