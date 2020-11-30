@@ -115,41 +115,6 @@ fun RecipeView(
                             .fillMaxWidth()
                             .padding(8.dp)
             ) {
-                recipe.publisher?.let { publisher ->
-                    Row(
-                            modifier = Modifier
-                                    .height(40.dp)
-                                    .fillMaxWidth()
-                                    .padding(bottom = 8.dp)
-                    ){
-                        AnimatedHeartButton(
-                                modifier = Modifier
-                                        .align(Alignment.CenterVertically)
-                                ,
-                                buttonState = mutableStateOf(if(isFavorite) HeartButtonState.ACTIVE else HeartButtonState.IDLE),
-                                onToggle = onToggleFavorite,
-                                iconSize = 24.dp,
-                                expandIconSize = 36.dp
-                        )
-                        Spacer(modifier = Modifier.padding(end = 15.dp))
-                        val updated = recipe.dateUpdated
-                        Text(
-                                text = if(updated != null) {
-                                    "Updated ${updated} by ${publisher}"
-                                }
-                                else {
-                                    "By ${publisher}"
-                                }
-                                ,
-                                modifier = Modifier
-                                        .fillMaxWidth()
-                                        .align(Alignment.CenterVertically)
-                                ,
-                                style = MaterialTheme.typography.caption
-                        )
-                    }
-
-                }
                 recipe.title?.let { title ->
                     Row(
                             modifier = Modifier
@@ -175,6 +140,23 @@ fun RecipeView(
                                 style = MaterialTheme.typography.h5
                         )
                     }
+                }
+                recipe.publisher?.let { publisher ->
+                    val updated = recipe.dateUpdated
+                    Text(
+                            text = if(updated != null) {
+                                "Updated ${updated} by ${publisher}"
+                            }
+                            else {
+                                "By ${publisher}"
+                            }
+                            ,
+                            modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 8.dp)
+                            ,
+                            style = MaterialTheme.typography.caption
+                    )
                 }
                 recipe.description?.let { description ->
                     if(description != "N/A"){
