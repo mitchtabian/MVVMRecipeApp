@@ -7,8 +7,9 @@ import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -21,6 +22,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import com.codingwithmitch.mvvmrecipeapp.R
 import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
 import com.codingwithmitch.mvvmrecipeapp.presentation.BaseApplication
@@ -64,18 +66,40 @@ class RecipeFragment: Fragment() {
 
                 val recipe by viewModel.recipe.collectAsState()
 
-
                 AppTheme(
                     darkTheme = !application.isLight,
                     progressBarIsDisplayed = displayProgressBar,
                 ){
-                    if (displayProgressBar && recipe == null) LoadingRecipeShimmer(IMAGE_HEIGHT)
-                    else recipe?.let {
-                        RecipeView(
-                                recipe = it,
-                        )
-                    }
+                    val scaffoldState = rememberScaffoldState()
+
+                    Scaffold(
+                            topBar = {
+                                TopAppBar(
+                                        elevation = 8.dp,
+                                        backgroundColor = MaterialTheme.colors.secondary
+                                ){
+                                    IconButton(
+                                            onClick = {
+                                                findNavController().popBackStack()
+                                            },
+                                            icon = {Icon(Icons.Default.ArrowBack)},
+                                            modifier = Modifier.align(Alignment.CenterVertically),
+                                    )
+                                }
+                            },
+                            scaffoldState = scaffoldState,
+                            snackbarHost = {
+                                scaffoldState.snackbarHostState
+                            }
+                    ) {
+                        if (displayProgressBar && recipe == null) LoadingRecipeShimmer(IMAGE_HEIGHT)
+                        else recipe?.let {
+                            RecipeView(
+                                    recipe = it,
+                            )
+                        }
 //                    LoadingRecipeShimmer(IMAGE_HEIGHT)
+                    }
                 }
             }
         }

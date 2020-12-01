@@ -28,7 +28,7 @@ fun CircularIndeterminateProgressBar(isDisplayed: Boolean, verticalBias: Float){
                                 end.linkTo(parent.end)
                                 start.linkTo(parent.start)
                             },
-                color = MaterialTheme.colors.secondary
+                color = MaterialTheme.colors.primary
             )
         }
 
