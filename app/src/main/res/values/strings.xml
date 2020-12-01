@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">MVVMRecipeApp</string>
 
+    <string name="dismiss">DISMISS</string>
+    <string name="feature_not_available">That feature is not available</string>
 </resources>

@@ -46,6 +46,10 @@ private val DarkThemeColors = darkColors(
 )
 
 @Composable
+val Colors.snackbarAction: Color
+        get() = if (isLight) Color.White else Color.White
+
+@Composable
 fun AppTheme(
         darkTheme: Boolean = isSystemInDarkTheme(),
         progressBarIsDisplayed: Boolean = false,

@@ -17,6 +17,7 @@ fun FoodCategoryChip(
     isSelected: Boolean = false,
     onSelectedCategoryChanged: (String) -> Unit,
     onExecuteSearch: () -> Unit,
+    onError: (String) -> Unit,
 ){
     Surface(
         modifier = Modifier.padding(end = 8.dp),
@@ -27,8 +28,14 @@ fun FoodCategoryChip(
             .toggleable(
                 value = isSelected,
                 onValueChange = {
-                    onSelectedCategoryChanged(category)
-                    onExecuteSearch()
+                    // for testing, force an error
+                    if(category == "Milk"){
+                        onError("Invalid category")
+                    }
+                    else{
+                        onSelectedCategoryChanged(category)
+                        onExecuteSearch()
+                    }
                 }
             )
         ) {

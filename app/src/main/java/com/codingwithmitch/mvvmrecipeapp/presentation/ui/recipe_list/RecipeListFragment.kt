@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.foundation.ScrollableRow
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -16,13 +17,13 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.ExperimentalFocus
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ContextAmbient
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -33,6 +34,7 @@ import androidx.navigation.findNavController
 import com.codingwithmitch.mvvmrecipeapp.R
 import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
 import com.codingwithmitch.mvvmrecipeapp.presentation.BaseApplication
+import com.codingwithmitch.mvvmrecipeapp.presentation.components.ErrorSnackbar
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.FoodCategoryChip
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.LoadingRecipeListShimmer
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.RecipeCard
@@ -44,8 +46,11 @@ import com.codingwithmitch.openchat.common.framework.presentation.theme.Black5
 import com.codingwithmitch.openchat.common.framework.presentation.theme.Grey1
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+@ExperimentalMaterialApi
 @ExperimentalFocus
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
@@ -78,6 +83,11 @@ class RecipeListFragment: Fragment() {
 
                 val page by viewModel.page.collectAsState()
 
+                val snackbarHostState = remember { SnackbarHostState() }
+                val scope = rememberCoroutineScope()
+
+                val stackbarActionLabel = stringResource(id = R.string.dismiss)
+
                 AppTheme(
                         darkTheme = !application.isLight,
                         progressBarIsDisplayed = displayProgressBar,
@@ -86,6 +96,7 @@ class RecipeListFragment: Fragment() {
                             modifier = Modifier
                                     .background(color = if(application.isLight) Grey1 else Black5)
                     ) {
+                        
                         SearchAppBar(
                                 query = query,
                                 onQueryChanged = viewModel::onQueryChanged,
@@ -98,32 +109,51 @@ class RecipeListFragment: Fragment() {
                                 scrollPosition = viewModel.categoryScrollPosition,
                                 onChangeScrollPosition = viewModel::onChangeCategoryScrollPosition,
                                 onToggleTheme = application::toggleLightTheme,
-                        )
-                        if (displayProgressBar && recipes.isEmpty()) LoadingRecipeListShimmer(200)
-                        else RecipeList(
-                                recipes = recipes,
-                                page = page,
-                                onNextPage = {
-                                    viewModel.onTriggerEvent(NextPageEvent())
-                                },
-                                isLoading = displayProgressBar,
-                                onSelectRecipe = {
-                                    val bundle = Bundle()
-                                    bundle.putInt("recipeId", it)
-                                    findNavController().navigate(R.id.viewRecipe, bundle)
-                                },
                                 onError = {
-                                    TODO("show error toast somehow")
+                                    scope.launch {
+                                        snackbarHostState.showSnackbar(
+                                                message = it,
+                                                actionLabel = stackbarActionLabel
+                                        )
+                                    }
                                 }
                         )
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            if (displayProgressBar && recipes.isEmpty()) LoadingRecipeListShimmer(200)
+                            else RecipeList(
+                                    recipes = recipes,
+                                    page = page,
+                                    onNextPage = {
+                                        viewModel.onTriggerEvent(NextPageEvent())
+                                    },
+                                    isLoading = displayProgressBar,
+                                    onSelectRecipe = {
+                                        val bundle = Bundle()
+                                        bundle.putInt("recipeId", it)
+                                        findNavController().navigate(R.id.viewRecipe, bundle)
+                                    },
+                                    onError = {
+                                        scope.launch {
+                                            snackbarHostState.showSnackbar(
+                                                    message = it,
+                                                    actionLabel = stackbarActionLabel
+                                            )
+                                        }
+                                    }
+                            )
+                            ErrorSnackbar(
+                                    snackbarHostState = snackbarHostState,
+                                    onDismiss = { snackbarHostState.currentSnackbarData?.dismiss() },
+                                    modifier = Modifier.align(Alignment.BottomCenter)
+                            )
+                        }
                     }
-
                 }
             }
         }
     }
-
 }
+
 
 @ExperimentalCoroutinesApi
 @Composable
@@ -169,6 +199,7 @@ fun SearchAppBar(
     scrollPosition: Float,
     onChangeScrollPosition: (Float) -> Unit,
     onToggleTheme: () -> Unit,
+    onError: (String) -> Unit,
 ){
     Surface(
             modifier = Modifier.padding(bottom = 8.dp),
@@ -240,6 +271,7 @@ fun SearchAppBar(
                                         onSelectedCategoryChanged(it)
                                     },
                                     onExecuteSearch = onExecuteSearch,
+                                    onError = onError,
                             )
                         }
                     }
