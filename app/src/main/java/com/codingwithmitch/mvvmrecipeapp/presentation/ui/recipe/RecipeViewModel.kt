@@ -31,16 +31,8 @@ constructor(
 
     val loading: StateFlow<Boolean> get() = _loading
 
-    private val _isFavorite: MutableStateFlow<Boolean> = MutableStateFlow(false)
-
-    val isFavorite: StateFlow<Boolean> get() = _isFavorite
-
     // has the recipe been loaded?
     var hasLoaded: Boolean = false
-
-    fun onToggleFavorite(){
-        _isFavorite.value = !_isFavorite.value
-    }
 
     fun onTriggerEvent(event: RecipeEvent){
         viewModelScope.launch {

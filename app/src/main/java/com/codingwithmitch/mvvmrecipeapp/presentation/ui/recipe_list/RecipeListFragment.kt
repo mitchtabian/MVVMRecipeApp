@@ -99,7 +99,7 @@ class RecipeListFragment: Fragment() {
                                 onChangeScrollPosition = viewModel::onChangeCategoryScrollPosition,
                                 onToggleTheme = application::toggleLightTheme,
                         )
-                        if (displayProgressBar && recipes.isEmpty()) LoadingRecipeListShimmer()
+                        if (displayProgressBar && recipes.isEmpty()) LoadingRecipeListShimmer(200)
                         else RecipeList(
                                 recipes = recipes,
                                 page = page,

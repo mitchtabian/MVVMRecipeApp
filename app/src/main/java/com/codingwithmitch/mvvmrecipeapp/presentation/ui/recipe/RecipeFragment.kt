@@ -24,8 +24,6 @@ import androidx.fragment.app.viewModels
 import com.codingwithmitch.mvvmrecipeapp.R
 import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
 import com.codingwithmitch.mvvmrecipeapp.presentation.BaseApplication
-import com.codingwithmitch.mvvmrecipeapp.presentation.components.AnimatedHeartButton
-import com.codingwithmitch.mvvmrecipeapp.presentation.components.HeartButtonState
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.LoadingRecipeShimmer
 import com.codingwithmitch.mvvmrecipeapp.util.DEFAULT_RECIPE_IMAGE
 import com.codingwithmitch.mvvmrecipeapp.util.loadPicture
@@ -66,7 +64,6 @@ class RecipeFragment: Fragment() {
 
                 val recipe by viewModel.recipe.collectAsState()
 
-                val isFavorite by viewModel.isFavorite.collectAsState()
 
                 AppTheme(
                     darkTheme = !application.isLight,
@@ -76,8 +73,6 @@ class RecipeFragment: Fragment() {
                     else recipe?.let {
                         RecipeView(
                                 recipe = it,
-                                isFavorite = isFavorite,
-                                onToggleFavorite = viewModel::onToggleFavorite,
                         )
                     }
 //                    LoadingRecipeShimmer(IMAGE_HEIGHT)
@@ -91,8 +86,6 @@ class RecipeFragment: Fragment() {
 @Composable
 fun RecipeView(
         recipe: Recipe,
-        isFavorite: Boolean,
-        onToggleFavorite: () -> Unit,
 ){
     ScrollableColumn(
             modifier = Modifier

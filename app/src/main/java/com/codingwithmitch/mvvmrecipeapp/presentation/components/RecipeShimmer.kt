@@ -18,7 +18,9 @@ import androidx.compose.ui.unit.dp
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.util.AnimationDefinitions
 
 @Composable
-fun LoadingRecipeListShimmer(){
+fun LoadingRecipeListShimmer(
+        imageHeight: Int,
+){
 
     val dpStartState by remember { mutableStateOf(AnimationDefinitions.AnimationState.START) }
     val dpEndState by remember { mutableStateOf(AnimationDefinitions.AnimationState.END) }
@@ -37,17 +39,17 @@ fun LoadingRecipeListShimmer(){
 
     val list = listOf(
             shimmerColorAnim[AnimationDefinitions.shimmerColorPropKey],
-            shimmerColorAnim[AnimationDefinitions.shimmerColorPropKey].copy(alpha = 0.5f)
+            shimmerColorAnim[AnimationDefinitions.shimmerColorPropKey].copy(alpha = 0.1f)
     )
     val dpValue = shimmerTranslateAnim[AnimationDefinitions.shimmerDpPropKey]
 
     ScrollableColumn() {
-        ShimmerRecipeCardItem(list, dpValue.value)
-        ShimmerRecipeCardItem(list, dpValue.value)
-        ShimmerRecipeCardItem(list, dpValue.value)
-        ShimmerRecipeCardItem(list, dpValue.value)
-        ShimmerRecipeCardItem(list, dpValue.value)
-        ShimmerRecipeCardItem(list, dpValue.value)
+        ShimmerRecipeCardItem(list, dpValue.value, imageHeight)
+        ShimmerRecipeCardItem(list, dpValue.value, imageHeight)
+        ShimmerRecipeCardItem(list, dpValue.value, imageHeight)
+        ShimmerRecipeCardItem(list, dpValue.value, imageHeight)
+        ShimmerRecipeCardItem(list, dpValue.value, imageHeight)
+        ShimmerRecipeCardItem(list, dpValue.value, imageHeight)
     }
 
 }
@@ -55,7 +57,7 @@ fun LoadingRecipeListShimmer(){
 
 @Composable
 fun LoadingRecipeShimmer(
-        imageHeight: Int
+        imageHeight: Int,
 ){
 
     val dpStartState by remember { mutableStateOf(AnimationDefinitions.AnimationState.START) }
@@ -205,8 +207,10 @@ fun ShimmerRecipeItem(
 fun ShimmerRecipeCardItem(
         lists: List<Color>,
         floatAnim: Float = 0f,
+        imageHeight: Int,
 ) {
-    val brush = VerticalGradient(lists, 0f, floatAnim)
+    val largeBrush = VerticalGradient(lists, 0f, floatAnim)
+    val smallBrush = VerticalGradient(lists, 0f, (floatAnim * (20f / imageHeight)))
     Column(modifier = Modifier.padding(16.dp)) {
         Surface(
                 shape = MaterialTheme.shapes.small
@@ -214,9 +218,9 @@ fun ShimmerRecipeCardItem(
             Spacer(
                     modifier = Modifier
                             .fillMaxWidth()
-                            .preferredSize(200.dp)
+                            .preferredSize(imageHeight.dp)
                             .background(
-                                    brush = brush
+                                    brush = largeBrush
                             )
             )
         }
@@ -230,7 +234,7 @@ fun ShimmerRecipeCardItem(
                     modifier = Modifier
                             .fillMaxWidth()
                             .preferredHeight(15.dp)
-                            .background(brush = brush)
+                            .background(brush = smallBrush)
             )
         }
         Surface(
@@ -242,7 +246,7 @@ fun ShimmerRecipeCardItem(
                     modifier = Modifier
                             .fillMaxWidth()
                             .preferredHeight(15.dp)
-                            .background(brush = brush)
+                            .background(brush = smallBrush)
             )
         }
     }
