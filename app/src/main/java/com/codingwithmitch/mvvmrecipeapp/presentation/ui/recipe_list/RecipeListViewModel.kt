@@ -1,9 +1,7 @@
 package com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list
 
 import android.util.Log
-import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
@@ -52,7 +50,6 @@ constructor(
     val selectedCategory: StateFlow<FoodCategory?> get() = _selectedCategory
 
     var categoryScrollPosition: Float = 0f
-
 
      init {
         if(!hasExecutedSearch){

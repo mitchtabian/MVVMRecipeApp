@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.compose.foundation.ScrollableRow
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -22,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.ExperimentalFocus
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ContextAmbient
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -45,9 +43,7 @@ import com.codingwithmitch.openchat.common.framework.presentation.theme.AppTheme
 import com.codingwithmitch.openchat.common.framework.presentation.theme.Black5
 import com.codingwithmitch.openchat.common.framework.presentation.theme.Grey1
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 @ExperimentalMaterialApi
@@ -69,6 +65,7 @@ class RecipeListFragment: Fragment() {
         return inflater.inflate(
             R.layout.compose_view, container, false
         ).apply {
+
             findViewById<ComposeView>(R.id.compose_view).setContent {
 
                 val displayProgressBar by viewModel.loading.collectAsState()
@@ -83,69 +80,112 @@ class RecipeListFragment: Fragment() {
 
                 val page by viewModel.page.collectAsState()
 
-                val snackbarHostState = remember { SnackbarHostState() }
-                val scope = rememberCoroutineScope()
 
-                val stackbarActionLabel = stringResource(id = R.string.dismiss)
+                val snackbarScope = rememberCoroutineScope()
+                var snackbarJob: Job? = null
+
+                /**
+                 * 1. If no snackbar is showing, show it.
+                 * 2. If a snackbar is already showing, cancel it and show new one
+                 */
+                fun handleSnackbarError(
+                        scaffoldState: ScaffoldState,
+                        message: String,
+                        actionLabel: String
+                ){
+                    if(snackbarJob == null){
+                        snackbarJob = snackbarScope.launch {
+                            scaffoldState.snackbarHostState.showSnackbar(
+                                    message = message,
+                                    actionLabel = actionLabel
+                            )
+                            snackbarJob?.cancel()
+                            snackbarJob = null
+                        }
+                    }
+                    else{
+                        snackbarJob?.cancel()
+                        snackbarJob = null
+                        snackbarJob = snackbarScope.launch {
+                            scaffoldState.snackbarHostState.showSnackbar(
+                                    message = message,
+                                    actionLabel = actionLabel
+                            )
+                            snackbarJob?.cancel()
+                            snackbarJob = null
+                        }
+                    }
+                }
+
+                val snackbarActionLabel = stringResource(id = R.string.dismiss)
 
                 AppTheme(
                         darkTheme = !application.isLight,
                         progressBarIsDisplayed = displayProgressBar,
                 ){
-                    Column(
-                            modifier = Modifier
-                                    .background(color = if(application.isLight) Grey1 else Black5)
-                    ) {
-                        
-                        SearchAppBar(
-                                query = query,
-                                onQueryChanged = viewModel::onQueryChanged,
-                                onExecuteSearch = {
-                                    viewModel.onTriggerEvent(NewSearchEvent())
-                                },
-                                categories = categories,
-                                selectedCategory = selectedCategory,
-                                onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
-                                scrollPosition = viewModel.categoryScrollPosition,
-                                onChangeScrollPosition = viewModel::onChangeCategoryScrollPosition,
-                                onToggleTheme = application::toggleLightTheme,
-                                onError = {
-                                    scope.launch {
-                                        snackbarHostState.showSnackbar(
-                                                message = it,
-                                                actionLabel = stackbarActionLabel
-                                        )
-                                    }
-                                }
-                        )
-                        Box(modifier = Modifier.fillMaxSize()) {
-                            if (displayProgressBar && recipes.isEmpty()) LoadingRecipeListShimmer(200)
-                            else RecipeList(
-                                    recipes = recipes,
-                                    page = page,
-                                    onNextPage = {
-                                        viewModel.onTriggerEvent(NextPageEvent())
-                                    },
-                                    isLoading = displayProgressBar,
-                                    onSelectRecipe = {
-                                        val bundle = Bundle()
-                                        bundle.putInt("recipeId", it)
-                                        findNavController().navigate(R.id.viewRecipe, bundle)
-                                    },
-                                    onError = {
-                                        scope.launch {
-                                            snackbarHostState.showSnackbar(
+                    val scaffoldState = rememberScaffoldState()
+
+                    Scaffold(
+                            topBar = {
+                                SearchAppBar(
+                                        query = query,
+                                        onQueryChanged = viewModel::onQueryChanged,
+                                        onExecuteSearch = {
+                                            viewModel.onTriggerEvent(NewSearchEvent())
+                                        },
+                                        categories = categories,
+                                        selectedCategory = selectedCategory,
+                                        onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
+                                        scrollPosition = viewModel.categoryScrollPosition,
+                                        onChangeScrollPosition = viewModel::onChangeCategoryScrollPosition,
+                                        onToggleTheme = application::toggleLightTheme,
+                                        onError = {
+                                            handleSnackbarError(
+                                                    scaffoldState = scaffoldState,
                                                     message = it,
-                                                    actionLabel = stackbarActionLabel
+                                                    actionLabel = snackbarActionLabel
                                             )
                                         }
-                                    }
-                            )
-                            ErrorSnackbar(
-                                    snackbarHostState = snackbarHostState,
-                                    onDismiss = { snackbarHostState.currentSnackbarData?.dismiss() },
-                                    modifier = Modifier.align(Alignment.BottomCenter)
-                            )
+                                )
+                            },
+                            scaffoldState = scaffoldState,
+                            snackbarHost = {
+                                scaffoldState.snackbarHostState
+                            }
+
+                    ) {
+                        Column(
+                                modifier = Modifier
+                                        .background(color = if(application.isLight) Grey1 else Black5)
+                        ) {
+                            Box(modifier = Modifier.fillMaxSize()) {
+                                if (displayProgressBar && recipes.isEmpty()) LoadingRecipeListShimmer(200)
+                                else RecipeList(
+                                        recipes = recipes,
+                                        page = page,
+                                        onNextPage = {
+                                            viewModel.onTriggerEvent(NextPageEvent())
+                                        },
+                                        isLoading = displayProgressBar,
+                                        onSelectRecipe = {
+                                            val bundle = Bundle()
+                                            bundle.putInt("recipeId", it)
+                                            findNavController().navigate(R.id.viewRecipe, bundle)
+                                        },
+                                        onError = {
+                                            handleSnackbarError(
+                                                    scaffoldState = scaffoldState,
+                                                    message = it,
+                                                    actionLabel = snackbarActionLabel
+                                            )
+                                        }
+                                )
+                                ErrorSnackbar(
+                                        snackbarHostState = scaffoldState.snackbarHostState,
+                                        onDismiss = { scaffoldState.snackbarHostState.currentSnackbarData?.dismiss() },
+                                        modifier = Modifier.align(Alignment.BottomCenter)
+                                )
+                            }
                         }
                     }
                 }
