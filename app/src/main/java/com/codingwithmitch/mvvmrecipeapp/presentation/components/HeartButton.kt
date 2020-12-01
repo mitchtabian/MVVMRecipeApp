@@ -30,19 +30,11 @@ val size = DpPropKey()
 @Composable
 fun AnimatedHeartButton(
         modifier: Modifier,
-        isActive: Boolean,
+        buttonState: MutableState<HeartButtonState>,
         onToggle: () -> Unit,
         iconSize: Dp,
         expandIconSize: Dp,
 ){
-    val buttonState = remember{ mutableStateOf(HeartButtonState.IDLE) }
-
-    if(isActive){
-        buttonState.value = HeartButtonState.ACTIVE
-    }
-    else{
-        buttonState.value = HeartButtonState.IDLE
-    }
 
     val transitionDefinition = transitionDefinition<HeartButtonState> {
         state(HeartButtonState.IDLE) {
