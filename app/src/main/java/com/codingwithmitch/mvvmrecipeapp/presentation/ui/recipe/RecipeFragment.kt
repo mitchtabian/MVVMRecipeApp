@@ -73,20 +73,6 @@ class RecipeFragment: Fragment() {
                     val scaffoldState = rememberScaffoldState()
 
                     Scaffold(
-                            topBar = {
-                                TopAppBar(
-                                        elevation = 8.dp,
-                                        backgroundColor = MaterialTheme.colors.secondary
-                                ){
-                                    IconButton(
-                                            onClick = {
-                                                findNavController().popBackStack()
-                                            },
-                                            icon = {Icon(Icons.Default.ArrowBack)},
-                                            modifier = Modifier.align(Alignment.CenterVertically),
-                                    )
-                                }
-                            },
                             scaffoldState = scaffoldState,
                             snackbarHost = {
                                 scaffoldState.snackbarHostState
