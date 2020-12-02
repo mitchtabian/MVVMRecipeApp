@@ -1,6 +1,7 @@
 package com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
@@ -13,8 +14,6 @@ import com.codingwithmitch.mvvmrecipeapp.repository.RecipeRepository
 import com.codingwithmitch.mvvmrecipeapp.util.TAG
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Named
 
@@ -28,32 +27,25 @@ constructor(
         private @Named("auth_token") val token: String,
 ): ViewModel(){
 
-    private val _recipes: MutableStateFlow<List<Recipe>> = MutableStateFlow(ArrayList())
 
-    val recipes: StateFlow<List<Recipe>> get() = _recipes
+    val recipes: MutableState<List<Recipe>> = mutableStateOf(ArrayList())
 
-    private val _loading: MutableStateFlow<Boolean> = MutableStateFlow(false)
-
-    val loading: StateFlow<Boolean> get() = _loading
+    val loading = mutableStateOf(false)
 
     // Pagination starts at '1' (-1 = exhausted?)
-    private val _page: MutableStateFlow<Int> = MutableStateFlow(1)
+    val page = mutableStateOf(1)
 
-    val page: StateFlow<Int> get() = _page
+    val query = mutableStateOf("")
 
-    private val _query: MutableStateFlow<String> = MutableStateFlow("")
-
-    val query: StateFlow<String> get() = _query
-
-    private val _genericDialogInfo: MutableStateFlow<GenericDialogInfo?> = MutableStateFlow(null)
-
-    val genericDialogInfo: StateFlow<GenericDialogInfo?> get() = _genericDialogInfo
+    /**
+     * Display a dialog for the user to see.
+     * If GenericDialogInfo == null, do not a show dialog.
+     */
+    val genericDialogInfo: MutableState<GenericDialogInfo?> = mutableStateOf(null)
 
     private var hasExecutedSearch = false // has the user done a search?
 
-    private val _selectedCategory: MutableStateFlow<FoodCategory?> = MutableStateFlow(null)
-
-    val selectedCategory: StateFlow<FoodCategory?> get() = _selectedCategory
+    val selectedCategory: MutableState<FoodCategory?> = mutableStateOf(null)
 
     var categoryScrollPosition: Float = 0f
 
@@ -80,13 +72,13 @@ constructor(
             }
             finally {
                 Log.d(TAG, "launchJob: finally called.")
-                _loading.value = false
+                loading.value = false
             }
         }
     }
 
     private suspend fun newSearch(){
-        _loading.value = true
+        loading.value = true
         hasExecutedSearch = true
 
         // New search. Reset the state
@@ -95,36 +87,36 @@ constructor(
         // just to show pagination, api is fast
         delay(1000)
 
-        val result = repository.search(token = token, page = _page.value, query = _query.value )
-        _recipes.value = result
+        val result = repository.search(token = token, page = page.value, query = query.value )
+        recipes.value = result
     }
 
     private suspend fun nextPage(){
-        _loading.value = true
+        loading.value = true
         incrementPage()
-        Log.d(TAG, "nextPage: triggered: ${_page.value}")
+        Log.d(TAG, "nextPage: triggered: ${page.value}")
 
         // just to show pagination, api is fast
         delay(1000)
 
-        if(_page.value > 1){
-            val result = repository.search(token = token, page = _page.value, query = _query.value )
+        if(page.value > 1){
+            val result = repository.search(token = token, page = page.value, query = query.value )
             Log.d(TAG, "search: appending")
             appendRecipes(result)
         }
     }
 
     fun onChangeGenericDialogInfo(dialogInfo: GenericDialogInfo?){
-        _genericDialogInfo.value = dialogInfo
+        genericDialogInfo.value = dialogInfo
     }
 
     /**
      * Called when a new search is executed.
      */
     private fun resetSearchState(){
-        _recipes.value = listOf()
-        _page.value = 1
-        if(_selectedCategory.value?.value != _query.value) clearSelectedCategory()
+        recipes.value = listOf()
+        page.value = 1
+        if(selectedCategory.value?.value != query.value) clearSelectedCategory()
 
     }
 
@@ -132,29 +124,29 @@ constructor(
      * Append new recipes to the current list of recipes
      */
     private fun appendRecipes(recipes: List<Recipe>){
-        val current = _recipes.value
+        val current = this.recipes.value
         val new = listOf(current, recipes).flatten()
-        _recipes.value = new
+        this.recipes.value = new
     }
 
     private fun incrementPage(){
-        _page.value += 1
+        page.value += 1
     }
 
     /**
      * Keep track of what the user has searched
      */
     fun onQueryChanged(query: String){
-        _query.value = query
+        this.query.value = query
     }
 
     private fun clearSelectedCategory(){
-        _selectedCategory.value = null
+        selectedCategory.value = null
     }
 
     fun onSelectedCategoryChanged(category: String){
         val newCategory = getFoodCategory(category)
-        _selectedCategory.value = newCategory
+        selectedCategory.value = newCategory
         onQueryChanged(category)
     }
 

@@ -16,7 +16,8 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.ExperimentalFocus
@@ -41,7 +42,9 @@ import com.codingwithmitch.openchat.common.framework.presentation.theme.AppTheme
 import com.codingwithmitch.openchat.common.framework.presentation.theme.Black5
 import com.codingwithmitch.openchat.common.framework.presentation.theme.Grey1
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @ExperimentalMaterialApi
@@ -66,22 +69,22 @@ class RecipeListFragment: Fragment() {
 
             findViewById<ComposeView>(R.id.compose_view).setContent {
 
-                val displayProgressBar by viewModel.loading.collectAsState()
+                val displayProgressBar = viewModel.loading.value
 
-                val selectedCategory by viewModel.selectedCategory.collectAsState()
+                val selectedCategory = viewModel.selectedCategory.value
 
                 val categories = getAllFoodCategories()
 
-                val recipes by viewModel.recipes.collectAsState()
+                val recipes = viewModel.recipes.value
 
-                val query by viewModel.query.collectAsState()
+                val query = viewModel.query.value
 
-                val page by viewModel.page.collectAsState()
+                val page = viewModel.page.value
 
                 val errorTitle = stringResource(id = R.string.Error)
                 val okActionLabel = stringResource(id = R.string.Ok)
 
-                val genericDialogInfo by viewModel.genericDialogInfo.collectAsState()
+                val genericDialogInfo = viewModel.genericDialogInfo.value
 
                 val snackbarActionLabel = stringResource(id = R.string.dismiss)
 
