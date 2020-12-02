@@ -12,6 +12,7 @@
             android:id="@+id/viewRecipe"
             app:destination="@id/recipeFragment">
 
+
         </action>
     </fragment>
     <fragment

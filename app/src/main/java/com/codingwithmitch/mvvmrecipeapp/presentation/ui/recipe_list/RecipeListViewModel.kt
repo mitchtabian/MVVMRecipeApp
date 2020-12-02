@@ -27,30 +27,10 @@ constructor(
         private @Named("auth_token") val token: String,
 ): ViewModel(){
 
-
-    val recipes: MutableState<List<Recipe>> = mutableStateOf(ArrayList())
-
-    val loading = mutableStateOf(false)
-
-    // Pagination starts at '1' (-1 = exhausted?)
-    val page = mutableStateOf(1)
-
-    val query = mutableStateOf("")
-
-    /**
-     * Display a dialog for the user to see.
-     * If GenericDialogInfo == null, do not a show dialog.
-     */
-    val genericDialogInfo: MutableState<GenericDialogInfo?> = mutableStateOf(null)
-
-    private var hasExecutedSearch = false // has the user done a search?
-
-    val selectedCategory: MutableState<FoodCategory?> = mutableStateOf(null)
-
-    var categoryScrollPosition: Float = 0f
+    val viewState: MutableState<RecipeListViewState> = mutableStateOf(RecipeListViewState())
 
      init {
-        if(!hasExecutedSearch){
+        if(!viewState.value.hasExecutedSearch){
             onTriggerEvent(NewSearchEvent())
         }
     }
@@ -72,14 +52,13 @@ constructor(
             }
             finally {
                 Log.d(TAG, "launchJob: finally called.")
-                loading.value = false
+                viewState.value = viewState.value.copy(loading = false)
             }
         }
     }
 
     private suspend fun newSearch(){
-        loading.value = true
-        hasExecutedSearch = true
+        viewState.value = viewState.value.copy(loading = true, hasExecutedSearch = true)
 
         // New search. Reset the state
         resetSearchState()
@@ -87,36 +66,36 @@ constructor(
         // just to show pagination, api is fast
         delay(1000)
 
-        val result = repository.search(token = token, page = page.value, query = query.value )
-        recipes.value = result
+        val result = repository.search(token = token, page = viewState.value.page, query = viewState.value.query )
+        viewState.value = viewState.value.copy(recipes = result)
     }
 
     private suspend fun nextPage(){
-        loading.value = true
+        viewState.value = viewState.value.copy(loading = true)
         incrementPage()
-        Log.d(TAG, "nextPage: triggered: ${page.value}")
+        Log.d(TAG, "nextPage: triggered: ${viewState.value.page}")
 
         // just to show pagination, api is fast
         delay(1000)
 
-        if(page.value > 1){
-            val result = repository.search(token = token, page = page.value, query = query.value )
+        if(viewState.value.page > 1){
+            val result = repository.search(token = token, page = viewState.value.page, query = viewState.value.query)
             Log.d(TAG, "search: appending")
             appendRecipes(result)
         }
     }
 
     fun onChangeGenericDialogInfo(dialogInfo: GenericDialogInfo?){
-        genericDialogInfo.value = dialogInfo
+        viewState.value = viewState.value.copy(genericDialogInfo = dialogInfo)
     }
 
     /**
      * Called when a new search is executed.
      */
     private fun resetSearchState(){
-        recipes.value = listOf()
-        page.value = 1
-        if(selectedCategory.value?.value != query.value) clearSelectedCategory()
+        viewState.value = viewState.value.copy(recipes = listOf())
+        viewState.value = viewState.value.copy(page = 1)
+        if(viewState.value.selectedCategory?.value != viewState.value.query) clearSelectedCategory()
 
     }
 
@@ -124,35 +103,35 @@ constructor(
      * Append new recipes to the current list of recipes
      */
     private fun appendRecipes(recipes: List<Recipe>){
-        val current = this.recipes.value
+        val current = viewState.value.recipes
         val new = listOf(current, recipes).flatten()
-        this.recipes.value = new
+        viewState.value = viewState.value.copy(recipes = new)
     }
 
     private fun incrementPage(){
-        page.value += 1
+        viewState.value = viewState.value.copy(page = viewState.value.page + 1)
     }
 
     /**
      * Keep track of what the user has searched
      */
     fun onQueryChanged(query: String){
-        this.query.value = query
+        viewState.value = viewState.value.copy(query = query)
     }
 
     private fun clearSelectedCategory(){
-        selectedCategory.value = null
+        viewState.value = viewState.value.copy(selectedCategory = null)
     }
 
     fun onSelectedCategoryChanged(category: String){
         val newCategory = getFoodCategory(category)
-        selectedCategory.value = newCategory
+        viewState.value = viewState.value.copy(selectedCategory = newCategory)
         onQueryChanged(category)
     }
 
 
     fun onChangeCategoryScrollPosition(position: Float){
-        categoryScrollPosition = position
+        viewState.value = viewState.value.copy(categoryScrollPosition = position)
     }
 
 

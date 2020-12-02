@@ -69,22 +69,22 @@ class RecipeListFragment: Fragment() {
 
             findViewById<ComposeView>(R.id.compose_view).setContent {
 
-                val displayProgressBar = viewModel.loading.value
+                val displayProgressBar = viewModel.viewState.value.loading
 
-                val selectedCategory = viewModel.selectedCategory.value
+                val selectedCategory = viewModel.viewState.value.selectedCategory
 
                 val categories = getAllFoodCategories()
 
-                val recipes = viewModel.recipes.value
+                val recipes = viewModel.viewState.value.recipes
 
-                val query = viewModel.query.value
+                val query = viewModel.viewState.value.query
 
-                val page = viewModel.page.value
+                val page = viewModel.viewState.value.page
 
                 val errorTitle = stringResource(id = R.string.Error)
                 val okActionLabel = stringResource(id = R.string.Ok)
 
-                val genericDialogInfo = viewModel.genericDialogInfo.value
+                val genericDialogInfo = viewModel.viewState.value.genericDialogInfo
 
                 val snackbarActionLabel = stringResource(id = R.string.dismiss)
 
@@ -140,7 +140,7 @@ class RecipeListFragment: Fragment() {
                                         categories = categories,
                                         selectedCategory = selectedCategory,
                                         onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
-                                        scrollPosition = viewModel.categoryScrollPosition,
+                                        scrollPosition = viewModel.viewState.value.categoryScrollPosition,
                                         onChangeScrollPosition = viewModel::onChangeCategoryScrollPosition,
                                         onToggleTheme = application::toggleLightTheme,
                                         onError = {
