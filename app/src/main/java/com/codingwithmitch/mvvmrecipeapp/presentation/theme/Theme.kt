@@ -7,13 +7,8 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ProvidedValue
-import androidx.compose.runtime.Providers
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import com.codingwithmitch.mvvmrecipeapp.presentation.BaseApplication
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.CircularIndeterminateProgressBar
 
 
@@ -60,7 +55,9 @@ fun AppTheme(
                 typography = QuickSandTypography,
                 shapes = AppShapes,
         ){
-                Box(modifier = Modifier
+
+                Box(
+                        modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxHeight()
                         .background(color = if(!darkTheme) Grey1 else Black5)

@@ -17,26 +17,6 @@ object AnimationDefinitions {
         START, MID, END
     }
 
-    //color animation
-    val colorPropKey = ColorPropKey(label = "color")
-    val colorAnimDefinition = transitionDefinition<AnimationState> {
-        state(AnimationState.START) { this[colorPropKey] = Color.Green }
-        state(AnimationState.MID) { this[colorPropKey] = Color.Blue }
-        state(AnimationState.END) { this[colorPropKey] = Color.Magenta }
-
-        transition(
-            AnimationState.START to AnimationState.MID,
-            AnimationState.MID to AnimationState.END,
-            AnimationState.END to AnimationState.START
-        ) {
-            colorPropKey using tween(
-                durationMillis = 1000,
-                easing = FastOutSlowInEasing,
-            )
-        }
-    }
-
-
     val shimmerColorPropKey = ColorPropKey(label = "shimmerColor")
     val shimmerColorAnimation = transitionDefinition<AnimationState> {
         state(AnimationState.START) {

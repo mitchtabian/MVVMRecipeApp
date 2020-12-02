@@ -32,10 +32,8 @@ import androidx.navigation.findNavController
 import com.codingwithmitch.mvvmrecipeapp.R
 import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
 import com.codingwithmitch.mvvmrecipeapp.presentation.BaseApplication
-import com.codingwithmitch.mvvmrecipeapp.presentation.components.ErrorSnackbar
-import com.codingwithmitch.mvvmrecipeapp.presentation.components.FoodCategoryChip
-import com.codingwithmitch.mvvmrecipeapp.presentation.components.LoadingRecipeListShimmer
-import com.codingwithmitch.mvvmrecipeapp.presentation.components.RecipeCard
+import com.codingwithmitch.mvvmrecipeapp.presentation.components.*
+import com.codingwithmitch.mvvmrecipeapp.presentation.components.util.GenericDialogInfo
 import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.NewSearchEvent
 import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.NextPageEvent
 import com.codingwithmitch.mvvmrecipeapp.util.TAG
@@ -80,10 +78,15 @@ class RecipeListFragment: Fragment() {
 
                 val page by viewModel.page.collectAsState()
 
+                val errorTitle = stringResource(id = R.string.Error)
+                val okActionLabel = stringResource(id = R.string.Ok)
+
+                val genericDialogInfo by viewModel.genericDialogInfo.collectAsState()
+
+                val snackbarActionLabel = stringResource(id = R.string.dismiss)
 
                 val snackbarScope = rememberCoroutineScope()
                 var snackbarJob: Job? = null
-
                 /**
                  * 1. If no snackbar is showing, show it.
                  * 2. If a snackbar is already showing, cancel it and show new one
@@ -117,8 +120,6 @@ class RecipeListFragment: Fragment() {
                     }
                 }
 
-                val snackbarActionLabel = stringResource(id = R.string.dismiss)
-
                 AppTheme(
                         darkTheme = !application.isLight,
                         progressBarIsDisplayed = displayProgressBar,
@@ -140,10 +141,22 @@ class RecipeListFragment: Fragment() {
                                         onChangeScrollPosition = viewModel::onChangeCategoryScrollPosition,
                                         onToggleTheme = application::toggleLightTheme,
                                         onError = {
-                                            handleSnackbarError(
-                                                    scaffoldState = scaffoldState,
-                                                    message = it,
-                                                    actionLabel = snackbarActionLabel
+
+                                            // Can use a snackbar or dialog here. Your choice.
+//                                            handleSnackbarError(
+//                                                    scaffoldState = scaffoldState,
+//                                                    message = it,
+//                                                    actionLabel = snackbarActionLabel
+//                                            )
+                                            viewModel.onChangeGenericDialogInfo(
+                                                    GenericDialogInfo(
+                                                            onDismiss = {viewModel.onChangeGenericDialogInfo(null)},
+                                                            title = errorTitle,
+                                                            description = it,
+                                                            positiveBtnTxt = okActionLabel,
+                                                            onPositiveAction = {viewModel.onChangeGenericDialogInfo(null)},
+                                                            onNegativeAction = {},
+                                                    )
                                             )
                                         }
                                 )
@@ -185,6 +198,17 @@ class RecipeListFragment: Fragment() {
                                         onDismiss = { scaffoldState.snackbarHostState.currentSnackbarData?.dismiss() },
                                         modifier = Modifier.align(Alignment.BottomCenter)
                                 )
+                                genericDialogInfo?.let { dialogInfo ->
+                                    GenericDialog(
+                                            onDismiss = dialogInfo.onDismiss,
+                                            title = dialogInfo.title,
+                                            description = dialogInfo.description,
+                                            positiveBtnTxt = dialogInfo.positiveBtnTxt,
+                                            onPositiveAction = dialogInfo.onPositiveAction,
+                                            negatveBtnTxt = dialogInfo.negatveBtnTxt,
+                                            onNegativeAction = dialogInfo.onNegativeAction,
+                                    )
+                                }
                             }
                         }
                     }
@@ -192,6 +216,8 @@ class RecipeListFragment: Fragment() {
             }
         }
     }
+
+
 }
 
 

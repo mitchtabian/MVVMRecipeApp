@@ -1,10 +1,12 @@
 package com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
+import com.codingwithmitch.mvvmrecipeapp.presentation.components.util.GenericDialogInfo
 import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.NewSearchEvent
 import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.NextPageEvent
 import com.codingwithmitch.mvvmrecipeapp.repository.RecipeRepository
@@ -42,6 +44,10 @@ constructor(
     private val _query: MutableStateFlow<String> = MutableStateFlow("")
 
     val query: StateFlow<String> get() = _query
+
+    private val _genericDialogInfo: MutableStateFlow<GenericDialogInfo?> = MutableStateFlow(null)
+
+    val genericDialogInfo: StateFlow<GenericDialogInfo?> get() = _genericDialogInfo
 
     private var hasExecutedSearch = false // has the user done a search?
 
@@ -106,6 +112,10 @@ constructor(
             Log.d(TAG, "search: appending")
             appendRecipes(result)
         }
+    }
+
+    fun onChangeGenericDialogInfo(dialogInfo: GenericDialogInfo?){
+        _genericDialogInfo.value = dialogInfo
     }
 
     /**

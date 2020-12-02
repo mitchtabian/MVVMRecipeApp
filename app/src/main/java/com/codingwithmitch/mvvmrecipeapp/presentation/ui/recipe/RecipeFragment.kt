@@ -8,12 +8,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageAsset
@@ -22,7 +19,6 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
 import com.codingwithmitch.mvvmrecipeapp.R
 import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
 import com.codingwithmitch.mvvmrecipeapp.presentation.BaseApplication
@@ -91,6 +87,7 @@ class RecipeFragment: Fragment() {
         }
     }
 }
+
 
 @ExperimentalCoroutinesApi
 @Composable

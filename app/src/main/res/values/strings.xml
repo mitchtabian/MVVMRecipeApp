@@ -3,4 +3,8 @@
 
     <string name="dismiss">DISMISS</string>
     <string name="feature_not_available">That feature is not available</string>
+    <string name="Error">Error</string>
+    <string name="Yes">Yes</string>
+    <string name="No">No</string>
+    <string name="Ok">Ok</string>
 </resources>
