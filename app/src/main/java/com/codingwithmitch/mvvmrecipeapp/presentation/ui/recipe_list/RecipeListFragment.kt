@@ -17,7 +17,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.ExperimentalFocus
@@ -34,7 +33,7 @@ import com.codingwithmitch.mvvmrecipeapp.R
 import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
 import com.codingwithmitch.mvvmrecipeapp.presentation.BaseApplication
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.*
-import com.codingwithmitch.mvvmrecipeapp.presentation.components.util.GenericDialogInfo
+import com.codingwithmitch.mvvmrecipeapp.presentation.components.util.SnackbarController
 import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.NewSearchEvent
 import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.NextPageEvent
 import com.codingwithmitch.mvvmrecipeapp.util.TAG
@@ -43,8 +42,6 @@ import com.codingwithmitch.openchat.common.framework.presentation.theme.Black5
 import com.codingwithmitch.openchat.common.framework.presentation.theme.Grey1
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @ExperimentalMaterialApi
@@ -55,6 +52,9 @@ class RecipeListFragment: Fragment() {
 
     @Inject
     lateinit var application: BaseApplication
+
+    @Inject
+    lateinit var snackbarController: SnackbarController
 
     private val viewModel: RecipeListViewModel by viewModels()
 
@@ -88,40 +88,6 @@ class RecipeListFragment: Fragment() {
 
                 val snackbarActionLabel = stringResource(id = R.string.dismiss)
 
-                val snackbarScope = rememberCoroutineScope()
-                var snackbarJob: Job? = null
-                /**
-                 * 1. If no snackbar is showing, show it.
-                 * 2. If a snackbar is already showing, cancel it and show new one
-                 */
-                fun handleSnackbarError(
-                        scaffoldState: ScaffoldState,
-                        message: String,
-                        actionLabel: String
-                ){
-                    if(snackbarJob == null){
-                        snackbarJob = snackbarScope.launch {
-                            scaffoldState.snackbarHostState.showSnackbar(
-                                    message = message,
-                                    actionLabel = actionLabel
-                            )
-                            snackbarJob?.cancel()
-                            snackbarJob = null
-                        }
-                    }
-                    else{
-                        snackbarJob?.cancel()
-                        snackbarJob = null
-                        snackbarJob = snackbarScope.launch {
-                            scaffoldState.snackbarHostState.showSnackbar(
-                                    message = message,
-                                    actionLabel = actionLabel
-                            )
-                            snackbarJob?.cancel()
-                            snackbarJob = null
-                        }
-                    }
-                }
 
                 AppTheme(
                         darkTheme = !application.isLight,
@@ -146,28 +112,28 @@ class RecipeListFragment: Fragment() {
                                         onError = {
 
                                             // Can use a snackbar or dialog here. Your choice.
-//                                            handleSnackbarError(
-//                                                    scaffoldState = scaffoldState,
-//                                                    message = it,
-//                                                    actionLabel = snackbarActionLabel
-//                                            )
-                                            viewModel.onChangeGenericDialogInfo(
-                                                    GenericDialogInfo(
-                                                            onDismiss = {viewModel.onChangeGenericDialogInfo(null)},
-                                                            title = errorTitle,
-                                                            description = it,
-                                                            positiveBtnTxt = okActionLabel,
-                                                            onPositiveAction = {viewModel.onChangeGenericDialogInfo(null)},
-                                                            onNegativeAction = {},
-                                                    )
+                                            snackbarController.handleSnackbarError(
+                                                    scaffoldState = scaffoldState,
+                                                    message = it,
+                                                    actionLabel = snackbarActionLabel
                                             )
+//                                            viewModel.onChangeGenericDialogInfo(
+//                                                    GenericDialogInfo(
+//                                                            onDismiss = {viewModel.onChangeGenericDialogInfo(null)},
+//                                                            title = errorTitle,
+//                                                            description = it,
+//                                                            positiveBtnTxt = okActionLabel,
+//                                                            onPositiveAction = {viewModel.onChangeGenericDialogInfo(null)},
+//                                                            onNegativeAction = {},
+//                                                    )
+//                                            )
                                         }
                                 )
                             },
                             scaffoldState = scaffoldState,
                             snackbarHost = {
                                 scaffoldState.snackbarHostState
-                            }
+                            },
 
                     ) {
                         Column(
@@ -189,7 +155,7 @@ class RecipeListFragment: Fragment() {
                                             findNavController().navigate(R.id.viewRecipe, bundle)
                                         },
                                         onError = {
-                                            handleSnackbarError(
+                                            snackbarController.handleSnackbarError(
                                                     scaffoldState = scaffoldState,
                                                     message = it,
                                                     actionLabel = snackbarActionLabel
