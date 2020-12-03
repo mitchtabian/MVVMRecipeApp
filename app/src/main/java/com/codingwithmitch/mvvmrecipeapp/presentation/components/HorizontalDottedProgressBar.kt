@@ -15,126 +15,152 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
-import com.codingwithmitch.mvvmrecipeapp.presentation.components.SwellAnimationDefinitions.SwellState.*
+import com.codingwithmitch.mvvmrecipeapp.presentation.components.SwellAnimationDefinitions.SwellState.FIRST
+import com.codingwithmitch.mvvmrecipeapp.presentation.components.SwellAnimationDefinitions.SwellState.SECOND
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.SwellAnimationDefinitions.swellDefinition
+import com.codingwithmitch.mvvmrecipeapp.presentation.components.SwellAnimationDefinitions.swellPropKey
 import com.codingwithmitch.mvvmrecipeapp.util.TAG
 
 
 object SwellAnimationDefinitions {
 
     enum class SwellState {
-        FIRST, SECOND, THIRD,
+        FIRST, SECOND,
     }
 
-    val swellIntPropKey = IntPropKey("swell_int")
+    val swellPropKey = DpPropKey("swell_key")
 
     val swellDefinition = transitionDefinition<SwellState> {
-        state(FIRST) { this[swellIntPropKey] = 1 }
-        state(SECOND) { this[swellIntPropKey] = 2 }
-        state(THIRD) { this[swellIntPropKey] = 3 }
+        state(FIRST) { this[swellPropKey] = 0.dp }
+        state(SECOND) { this[swellPropKey] = 120.dp }
 
         transition(
             FIRST to SECOND,
-            SECOND to THIRD,
-            THIRD to FIRST
         ) {
-            swellIntPropKey using repeatable(
+            swellPropKey using repeatable(
                 iterations =  Infinite,
                 animation = tween(
-                    durationMillis = 900,
-                    easing = LinearOutSlowInEasing
+                        delayMillis = 80,
+                        durationMillis = 700,
+                        easing = LinearEasing
                 )
             )
         }
-
     }
-
 }
 
 
 @Composable
-fun HorizontalDottedProgressBar(isDisplayed: Boolean,) {
-    if (isDisplayed) {
+fun HorizontalDottedProgressBar() {
+    val color = MaterialTheme.colors.primary
+    val start by remember{ mutableStateOf(FIRST)}
+    val end by remember{ mutableStateOf(SECOND)}
 
-        val color = MaterialTheme.colors.primary
+    val swellAnim = transition(
+        definition = swellDefinition,
+        initState = start,
+        toState = end
+    )
 
-        val swellAnim = transition(
-            definition = swellDefinition,
-            initState = FIRST,
-            toState = THIRD
-        )
+    val state = swellAnim[swellPropKey].value
 
-        val state = swellAnim[SwellAnimationDefinitions.swellIntPropKey]
+    Log.d(TAG, "HorizontalDottedProgressBar: ${state}")
 
-        Log.d(TAG, "HorizontalDottedProgressBar: ${state}")
+    DrawCanvas(state = state, color = color)
+}
 
-        Canvas(
+
+@Composable
+fun DrawCanvas(
+        state: Float,
+        color: Color,
+){
+    Canvas(
             modifier = Modifier.fillMaxWidth().height(55.dp),
-        ){
+    ){
 
-            val radius = (8.dp).toIntPx().toFloat()
-            val swellRadius = (12.dp).toIntPx().toFloat()
-            val padding = (8.dp).toIntPx().toFloat()
+        val radius = (4.dp).toIntPx().toFloat()
+        val padding = (6.dp).toIntPx().toFloat()
 
-            if(state == 1){
+        if(state >= 0 && state <= 20){
+            for(i in -2..2) {
                 drawCircle(
-                    radius = swellRadius,
-                    brush = SolidColor(color),
-                    center = Offset(x=this.center.x + radius*2 + padding, y=this.center.y)
-                )
-                drawCircle(
-                    radius = radius,
-                    brush = SolidColor(color),
-                    center = Offset(x=this.center.x, y=this.center.y)
-                )
-                drawCircle(
-                    radius = radius,
-                    brush = SolidColor(color),
-                    center = Offset(x=this.center.x - radius*2 - padding, y=this.center.y)
+                        radius = radius,
+                        brush = SolidColor(color),
+                        center = Offset(x = this.center.x + radius * 2 * i + padding * i, y = this.center.y)
                 )
             }
-            else if(state == 2){
+        }
+        else if(state > 20 && state <= 40){
+            for(i in -2..2) {
+                var swellRadius = radius
+                if(i == -2){
+                    swellRadius = radius * 2
+                }
                 drawCircle(
-                    radius = radius,
-                    brush = SolidColor(color),
-                    center = Offset(x=this.center.x + radius*2 + padding, y=this.center.y)
-                )
-                drawCircle(
-                    radius = swellRadius,
-                    brush = SolidColor(color),
-                    center = Offset(x=this.center.x, y=this.center.y)
-                )
-                drawCircle(
-                    radius = radius,
-                    brush = SolidColor(color),
-                    center = Offset(x=this.center.x - radius*2 - padding, y=this.center.y)
+                        radius = swellRadius,
+                        brush = SolidColor(color),
+                        center = Offset(x = this.center.x + radius * 2 * i + padding * i, y = this.center.y)
                 )
             }
-            else if(state == 3){
+        }
+        else if(state > 40 && state <= 60){
+            for(i in -2..2) {
+                var swellRadius = radius
+                if(i == -1){
+                    swellRadius = radius * 2
+                }
                 drawCircle(
-                    radius = radius,
-                    brush = SolidColor(color),
-                    center = Offset(x=this.center.x + radius*2 + padding, y=this.center.y)
-                )
-                drawCircle(
-                    radius = radius,
-                    brush = SolidColor(color),
-                    center = Offset(x=this.center.x, y=this.center.y)
-                )
-                drawCircle(
-                    radius = swellRadius,
-                    brush = SolidColor(color),
-                    center = Offset(x=this.center.x - radius*2 - padding, y=this.center.y)
+                        radius = swellRadius,
+                        brush = SolidColor(color),
+                        center = Offset(x = this.center.x + radius * 2 * i + padding * i, y = this.center.y)
                 )
             }
-
-
+        }
+        else if(state > 60 && state <= 80){
+            for(i in -2..2) {
+                var swellRadius = radius
+                if(i == 0){
+                    swellRadius = radius * 2
+                }
+                drawCircle(
+                        radius = swellRadius,
+                        brush = SolidColor(color),
+                        center = Offset(x = this.center.x + radius * 2 * i + padding * i, y = this.center.y)
+                )
+            }
+        }
+        else if(state > 80 && state <= 100){
+            for(i in -2..2) {
+                var swellRadius = radius
+                if(i == 1){
+                    swellRadius = radius * 2
+                }
+                drawCircle(
+                        radius = swellRadius,
+                        brush = SolidColor(color),
+                        center = Offset(x = this.center.x + radius * 2 * i + padding * i, y = this.center.y)
+                )
+            }
+        }
+        else if(state > 100){
+            for(i in -2..2) {
+                var swellRadius = radius
+                if(i == 2){
+                    swellRadius = radius * 2
+                }
+                drawCircle(
+                        radius = swellRadius,
+                        brush = SolidColor(color),
+                        center = Offset(x = this.center.x + radius * 2 * i + padding * i, y = this.center.y)
+                )
+            }
         }
     }
 }
-
 
 
 

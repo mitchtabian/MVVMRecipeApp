@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.CircularIndeterminateProgressBar
+import com.codingwithmitch.mvvmrecipeapp.presentation.components.HorizontalDottedProgressBar
 
 
 private val LightThemeColors = lightColors(
@@ -63,7 +64,7 @@ fun AppTheme(
                         .background(color = if(!darkTheme) Grey1 else Black5)
                 ){
                         content()
-                        CircularIndeterminateProgressBar(isDisplayed = progressBarIsDisplayed, 0.2f)
+                        CircularIndeterminateProgressBar(isDisplayed = progressBarIsDisplayed, 0.3f)
                 }
         }
 }
