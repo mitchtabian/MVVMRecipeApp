@@ -94,7 +94,7 @@ class RecipeListFragment: Fragment() {
 
                 AppTheme(
                         darkTheme = !application.isLight,
-                        progressBarIsDisplayed = false,
+                        progressBarIsDisplayed = displayProgressBar,
                 ){
                     val scaffoldState = rememberScaffoldState()
 
