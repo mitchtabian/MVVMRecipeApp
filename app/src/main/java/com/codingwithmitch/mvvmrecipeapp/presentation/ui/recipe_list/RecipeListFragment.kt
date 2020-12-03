@@ -81,7 +81,10 @@ class RecipeListFragment: Fragment() {
 
                 val page = viewModel.page.value
 
+                // for Error dialog
                 val errorTitle = stringResource(id = R.string.Error)
+
+                // for error dialog
                 val okActionLabel = stringResource(id = R.string.Ok)
 
                 val genericDialogInfo = viewModel.genericDialogInfo.value
@@ -140,6 +143,7 @@ class RecipeListFragment: Fragment() {
                                 modifier = Modifier
                                         .background(color = if(application.isLight) Grey1 else Black5)
                         ) {
+                            HorizontalDottedProgressBar(true)
                             Box(modifier = Modifier.fillMaxSize()) {
                                 if (displayProgressBar && recipes.isEmpty()) LoadingRecipeListShimmer(200)
                                 else RecipeList(
