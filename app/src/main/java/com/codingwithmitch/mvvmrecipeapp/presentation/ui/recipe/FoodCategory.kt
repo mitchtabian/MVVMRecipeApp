@@ -1,6 +1,7 @@
-package com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list
+package com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe
 
-import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list.FoodCategory.*
+import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe.FoodCategory.*
+
 
 enum class FoodCategory(val value: String){
     CHICKEN("Chicken"),
@@ -19,6 +20,6 @@ fun getAllFoodCategories(): List<FoodCategory>{
 }
 
 fun getFoodCategory(value: String): FoodCategory? {
-    val map = FoodCategory.values().associateBy(FoodCategory::value)
+    val map = values().associateBy(FoodCategory::value)
     return map[value]
 }

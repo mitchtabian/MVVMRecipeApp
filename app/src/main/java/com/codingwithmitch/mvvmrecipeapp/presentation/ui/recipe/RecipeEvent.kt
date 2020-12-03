@@ -1,8 +1,13 @@
 package com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe
 
-sealed class RecipeEvent{
+
+sealed class RecipeEvent {
+
+    class NewSearchEvent: RecipeEvent()
+
+    class NextPageEvent: RecipeEvent()
 
     data class GetRecipeEvent(
-        val id: Int
+            val recipeId: Int,
     ): RecipeEvent()
 }

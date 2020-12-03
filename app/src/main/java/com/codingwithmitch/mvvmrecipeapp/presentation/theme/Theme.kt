@@ -5,12 +5,14 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.*
+import androidx.compose.material.Colors
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.darkColors
+import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.CircularIndeterminateProgressBar
-import com.codingwithmitch.mvvmrecipeapp.presentation.components.HorizontalDottedProgressBar
 
 
 private val LightThemeColors = lightColors(
@@ -56,7 +58,6 @@ fun AppTheme(
                 typography = QuickSandTypography,
                 shapes = AppShapes,
         ){
-
                 Box(
                         modifier = Modifier
                         .fillMaxWidth()
