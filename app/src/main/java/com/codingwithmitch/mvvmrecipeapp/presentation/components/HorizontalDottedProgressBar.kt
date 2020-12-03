@@ -52,13 +52,11 @@ object SwellAnimationDefinitions {
 @Composable
 fun HorizontalDottedProgressBar() {
     val color = MaterialTheme.colors.primary
-    val start by remember{ mutableStateOf(FIRST)}
-    val end by remember{ mutableStateOf(SECOND)}
 
     val swellAnim = transition(
         definition = swellDefinition,
-        initState = start,
-        toState = end
+        initState = FIRST,
+        toState = SECOND
     )
 
     val state = swellAnim[swellPropKey]
