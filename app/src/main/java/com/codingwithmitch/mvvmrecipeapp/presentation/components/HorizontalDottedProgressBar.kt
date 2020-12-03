@@ -1,7 +1,5 @@
 package com.codingwithmitch.mvvmrecipeapp.presentation.components
 
-import android.util.Log
-import androidx.compose.animation.DpPropKey
 import androidx.compose.animation.core.*
 import androidx.compose.animation.core.AnimationConstants.Infinite
 import androidx.compose.animation.transition
@@ -22,7 +20,6 @@ import com.codingwithmitch.mvvmrecipeapp.presentation.components.SwellAnimationD
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.SwellAnimationDefinitions.SwellState.SECOND
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.SwellAnimationDefinitions.swellDefinition
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.SwellAnimationDefinitions.swellPropKey
-import com.codingwithmitch.mvvmrecipeapp.util.TAG
 
 
 object SwellAnimationDefinitions {
@@ -31,11 +28,11 @@ object SwellAnimationDefinitions {
         FIRST, SECOND,
     }
 
-    val swellPropKey = DpPropKey("swell_key")
+    val swellPropKey = FloatPropKey("swell_key")
 
     val swellDefinition = transitionDefinition<SwellState> {
-        state(FIRST) { this[swellPropKey] = 0.dp }
-        state(SECOND) { this[swellPropKey] = 120.dp }
+        state(FIRST) { this[swellPropKey] = 0f }
+        state(SECOND) { this[swellPropKey] = 6f }
 
         transition(
             FIRST to SECOND,
@@ -43,7 +40,6 @@ object SwellAnimationDefinitions {
             swellPropKey using repeatable(
                 iterations =  Infinite,
                 animation = tween(
-                        delayMillis = 80,
                         durationMillis = 700,
                         easing = LinearEasing
                 )
@@ -65,9 +61,7 @@ fun HorizontalDottedProgressBar() {
         toState = end
     )
 
-    val state = swellAnim[swellPropKey].value
-
-    Log.d(TAG, "HorizontalDottedProgressBar: ${state}")
+    val state = swellAnim[swellPropKey]
 
     DrawCanvas(state = state, color = color)
 }
@@ -85,77 +79,19 @@ fun DrawCanvas(
         val radius = (4.dp).toIntPx().toFloat()
         val padding = (6.dp).toIntPx().toFloat()
 
-        if(state >= 0 && state <= 20){
-            for(i in -2..2) {
+        for(i in 1..5) {
+            if(i-1 == state.toInt()){
+                drawCircle(
+                        radius = radius*2,
+                        brush = SolidColor(color),
+                        center = Offset(x = this.center.x + radius * 2 * (i-3)  + padding * (i-3), y = this.center.y)
+                )
+            }
+            else{
                 drawCircle(
                         radius = radius,
                         brush = SolidColor(color),
-                        center = Offset(x = this.center.x + radius * 2 * i + padding * i, y = this.center.y)
-                )
-            }
-        }
-        else if(state > 20 && state <= 40){
-            for(i in -2..2) {
-                var swellRadius = radius
-                if(i == -2){
-                    swellRadius = radius * 2
-                }
-                drawCircle(
-                        radius = swellRadius,
-                        brush = SolidColor(color),
-                        center = Offset(x = this.center.x + radius * 2 * i + padding * i, y = this.center.y)
-                )
-            }
-        }
-        else if(state > 40 && state <= 60){
-            for(i in -2..2) {
-                var swellRadius = radius
-                if(i == -1){
-                    swellRadius = radius * 2
-                }
-                drawCircle(
-                        radius = swellRadius,
-                        brush = SolidColor(color),
-                        center = Offset(x = this.center.x + radius * 2 * i + padding * i, y = this.center.y)
-                )
-            }
-        }
-        else if(state > 60 && state <= 80){
-            for(i in -2..2) {
-                var swellRadius = radius
-                if(i == 0){
-                    swellRadius = radius * 2
-                }
-                drawCircle(
-                        radius = swellRadius,
-                        brush = SolidColor(color),
-                        center = Offset(x = this.center.x + radius * 2 * i + padding * i, y = this.center.y)
-                )
-            }
-        }
-        else if(state > 80 && state <= 100){
-            for(i in -2..2) {
-                var swellRadius = radius
-                if(i == 1){
-                    swellRadius = radius * 2
-                }
-                drawCircle(
-                        radius = swellRadius,
-                        brush = SolidColor(color),
-                        center = Offset(x = this.center.x + radius * 2 * i + padding * i, y = this.center.y)
-                )
-            }
-        }
-        else if(state > 100){
-            for(i in -2..2) {
-                var swellRadius = radius
-                if(i == 2){
-                    swellRadius = radius * 2
-                }
-                drawCircle(
-                        radius = swellRadius,
-                        brush = SolidColor(color),
-                        center = Offset(x = this.center.x + radius * 2 * i + padding * i, y = this.center.y)
+                        center = Offset(x = this.center.x + radius * 2 * (i-3) + padding * (i-3), y = this.center.y)
                 )
             }
         }

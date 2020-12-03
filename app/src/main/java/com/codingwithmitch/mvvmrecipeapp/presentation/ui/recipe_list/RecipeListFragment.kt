@@ -144,9 +144,12 @@ class RecipeListFragment: Fragment() {
                                         .background(color = if(application.isLight) Grey1 else Black5)
                         ) {
                             Box(modifier = Modifier.fillMaxSize()) {
-                                if (displayProgressBar && recipes.isEmpty())
-                                    HorizontalDottedProgressBar()
-//                                LoadingRecipeListShimmer(200)
+                                if (displayProgressBar && recipes.isEmpty()){
+                                    Column {
+                                        HorizontalDottedProgressBar()
+                                        LoadingRecipeListShimmer(200)
+                                    }
+                                }
                                 else RecipeList(
                                         recipes = recipes,
                                         page = page,
