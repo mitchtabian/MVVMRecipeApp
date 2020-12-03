@@ -9,6 +9,7 @@ import androidx.compose.foundation.ScrollableRow
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumnForIndexed
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -17,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.savedinstancestate.savedInstanceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.ExperimentalFocus
@@ -90,6 +92,12 @@ class RecipeListFragment: Fragment() {
                 val genericDialogInfo = viewModel.genericDialogInfo.value
 
                 val snackbarActionLabel = stringResource(id = R.string.dismiss)
+
+//                val listState = rememberLazyListState()
+//
+//                var position = savedInstanceState { listState.firstVisibleItemScrollOffset }
+//                Log.d(TAG, "onCreateView: POSITION: ${position.value}")
+
 
 
                 AppTheme(
@@ -168,7 +176,9 @@ class RecipeListFragment: Fragment() {
                                                     message = it,
                                                     actionLabel = snackbarActionLabel
                                             )
-                                        }
+                                        },
+                                        onChangeScrollPosition = viewModel::onChangeRecipeScrollPosition,
+                                        firstVisibleIndex = viewModel.recipeListScrollPosition,
                                 )
                                 ErrorSnackbar(
                                         snackbarHostState = scaffoldState.snackbarHostState,
@@ -207,12 +217,19 @@ fun RecipeList(
         isLoading: Boolean = false,
         onSelectRecipe: (Int) -> Unit,
         onError: (String) -> Unit,
+        onChangeScrollPosition: (Int) -> Unit,
+        firstVisibleIndex: Int,
 ){
-    val state = rememberLazyListState()
+    val listState = rememberLazyListState(
+            initialFirstVisibleItemIndex = firstVisibleIndex
+    )
+    Log.d(TAG, "RecipeList: FIRST VISIBLE INDEX: ${firstVisibleIndex}")
+
     LazyColumnForIndexed(
             items = recipes,
-            state = state,
+            state = listState,
     ) { index, recipe ->
+        onChangeScrollPosition(index)
         Log.d(TAG, "RecipeList: index: ${index}")
         if((index + 1) >= (page * PAGE_SIZE) && !isLoading){
             onNextPage()

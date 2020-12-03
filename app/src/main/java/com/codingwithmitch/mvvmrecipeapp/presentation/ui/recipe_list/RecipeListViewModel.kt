@@ -3,13 +3,14 @@ package com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.util.GenericDialogInfo
-import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.NewSearchEvent
-import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.NextPageEvent
+import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.*
 import com.codingwithmitch.mvvmrecipeapp.repository.RecipeRepository
 import com.codingwithmitch.mvvmrecipeapp.util.TAG
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -19,14 +20,19 @@ import javax.inject.Named
 
 const val PAGE_SIZE = 30
 
+const val STATE_KEY_PAGE = "recipe.state.page.key"
+const val STATE_KEY_QUERY = "recipe.state.query.key"
+const val STATE_KEY_LIST_POSITION = "recipe.state.query.list_position"
+const val STATE_KEY_SELECTED_CATEGORY = "recipe.state.query.selected_category"
+
 @ExperimentalCoroutinesApi
 class RecipeListViewModel
 @ViewModelInject
 constructor(
         private val repository: RecipeRepository,
         private @Named("auth_token") val token: String,
+        @Assisted private val savedStateHandle: SavedStateHandle,
 ): ViewModel(){
-
 
     val recipes: MutableState<List<Recipe>> = mutableStateOf(ArrayList())
 
@@ -43,14 +49,33 @@ constructor(
      */
     val genericDialogInfo: MutableState<GenericDialogInfo?> = mutableStateOf(null)
 
-    private var hasExecutedSearch = false // has the user done a search?
-
     val selectedCategory: MutableState<FoodCategory?> = mutableStateOf(null)
 
     var categoryScrollPosition: Float = 0f
 
-     init {
-        if(!hasExecutedSearch){
+    var recipeListScrollPosition = 0
+
+    init {
+        savedStateHandle.get<Int>(STATE_KEY_PAGE)?.let { p ->
+            Log.d(TAG, "restoring page: ${p}")
+            setPage(p)
+        }
+        savedStateHandle.get<String>(STATE_KEY_QUERY)?.let { q ->
+            setQuery(q)
+        }
+        savedStateHandle.get<Int>(STATE_KEY_LIST_POSITION)?.let { p ->
+            Log.d(TAG, "restoring scroll position: ${p}")
+            setListScrollPosition(p)
+        }
+        savedStateHandle.get<FoodCategory>(STATE_KEY_SELECTED_CATEGORY)?.let { c ->
+            setSelectedCategory(c)
+        }
+
+        // Were they doing something before the process died?
+        if(recipeListScrollPosition != 0){
+            onTriggerEvent(RestoreStateEvent())
+        }
+        else{
             onTriggerEvent(NewSearchEvent())
         }
     }
@@ -65,6 +90,9 @@ constructor(
                     is NextPageEvent -> {
                         nextPage()
                     }
+                    is RestoreStateEvent -> {
+                        restoreState()
+                    }
                 }
             }catch (e: Exception){
                 Log.e(TAG, "launchJob: Exception: ${e}, ${e.cause}")
@@ -77,9 +105,20 @@ constructor(
         }
     }
 
+    private suspend fun restoreState(){
+        loading.value = true
+        // Must retrieve each page of results.
+        val results: ArrayList<Recipe> = ArrayList()
+        for(p in 1..page.value){
+            Log.d(TAG, "restoreState: page: ${p}, query: ${query.value}")
+            val result = repository.search(token = token, page = p, query = query.value )
+            results.addAll(result)
+        }
+        recipes.value = results
+    }
+
     private suspend fun newSearch(){
         loading.value = true
-        hasExecutedSearch = true
 
         // New search. Reset the state
         resetSearchState()
@@ -106,6 +145,10 @@ constructor(
         }
     }
 
+    fun onChangeRecipeScrollPosition(position: Int){
+        setListScrollPosition(position)
+    }
+
     fun onChangeGenericDialogInfo(dialogInfo: GenericDialogInfo?){
         genericDialogInfo.value = dialogInfo
     }
@@ -115,9 +158,9 @@ constructor(
      */
     private fun resetSearchState(){
         recipes.value = listOf()
-        page.value = 1
+        setPage(1)
+        setListScrollPosition(0)
         if(selectedCategory.value?.value != query.value) clearSelectedCategory()
-
     }
 
     /**
@@ -130,23 +173,23 @@ constructor(
     }
 
     private fun incrementPage(){
-        page.value += 1
+        setPage(page.value + 1)
     }
 
     /**
      * Keep track of what the user has searched
      */
     fun onQueryChanged(query: String){
-        this.query.value = query
+        setQuery(query)
     }
 
     private fun clearSelectedCategory(){
-        selectedCategory.value = null
+        setSelectedCategory(null)
     }
 
     fun onSelectedCategoryChanged(category: String){
         val newCategory = getFoodCategory(category)
-        selectedCategory.value = newCategory
+        setSelectedCategory(newCategory)
         onQueryChanged(category)
     }
 
@@ -155,7 +198,25 @@ constructor(
         categoryScrollPosition = position
     }
 
+    private fun setListScrollPosition(position: Int){
+        recipeListScrollPosition = position
+        savedStateHandle.set(STATE_KEY_LIST_POSITION, position)
+    }
 
+    private fun setPage(page: Int){
+        this.page.value = page
+        savedStateHandle.set(STATE_KEY_PAGE, page)
+    }
+
+    private fun setSelectedCategory(category: FoodCategory?){
+        selectedCategory.value = category
+        savedStateHandle.set(STATE_KEY_SELECTED_CATEGORY, category)
+    }
+
+    private fun setQuery(query: String){
+        this.query.value = query
+        savedStateHandle.set(STATE_KEY_QUERY, query)
+    }
 }
 
 
