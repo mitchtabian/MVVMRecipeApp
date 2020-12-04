@@ -2,18 +2,19 @@ package com.codingwithmitch.mvvmrecipeapp
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.ScrollableColumn
-import androidx.compose.foundation.background
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.ListItem
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.Adb
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.imageFromResource
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.setContent
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 
 class MainActivity : AppCompatActivity(){
@@ -21,41 +22,49 @@ class MainActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContent {
-            ScrollableColumn(
+        setContent{
+            ListItem(
                     modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight()
-                            .background(color = Color(0xFFF2F2F2))
+                            .height(100.dp)
+                            .border(border = BorderStroke(1.dp, Color.Black))
+                    ,
+                    icon = {
+                        Icon(
+                                Icons.Filled.Adb,
+                                modifier = Modifier
+                                        .border(border = BorderStroke(1.dp, Color.Black))
+                                )
+                    },
+                    trailing = {
+                        IconButton(
+                                onClick = {},
+                                modifier = Modifier
+                                        .border(border = BorderStroke(1.dp, Color.Black))
+                        ) {
+                            Icon(Icons.Filled.AccessTime)
+                        }
+
+                    },
+                    overlineText = {
+                        Text(
+                                text = "Overline text",
+                                modifier = Modifier
+                                        .border(border = BorderStroke(1.dp, Color.Black))
+                        )
+                    },
+                    secondaryText = {
+                        Text(
+                                text = "Secondary text",
+                                modifier = Modifier
+                                        .border(border = BorderStroke(1.dp, Color.Black))
+                        )
+                    }
             ) {
-                Image(
-                        bitmap = imageFromResource(res = resources, resId = R.drawable.happy_meal),
-                        modifier = Modifier.height(300.dp),
-                        contentScale = ContentScale.Crop,
+                Text(
+                        "Big Title Text",
+                        modifier = Modifier
+                                .border(border = BorderStroke(1.dp, Color.Black))
                 )
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                            text = "Happy Meal",
-                            style = TextStyle(
-                                    fontSize = TextUnit.Companion.Sp(26)
-                            )
-                    )
-                    Spacer(modifier = Modifier.padding(top = 8.dp))
-                    Text(
-                            text = "800 calories",
-                            style = TextStyle(
-                                    fontSize = TextUnit.Companion.Sp(17)
-                            )
-                    )
-                    Spacer(modifier = Modifier.padding(top = 8.dp))
-                    Text(
-                            text = "$5.99",
-                            style = TextStyle(
-                                    color = Color(0xFF85bb65),
-                                    fontSize = TextUnit.Companion.Sp(17)
-                            )
-                    )
-                }
             }
         }
     }
