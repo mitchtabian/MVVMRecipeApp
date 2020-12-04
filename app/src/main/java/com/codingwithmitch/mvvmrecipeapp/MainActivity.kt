@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity(){
                             .background(color = Color(0xFFF2F2F2))
             ) {
                 Image(
-                        bitmap = imageFromResource(res = resources, resId = R.drawable.happy_meal),
+                        bitmap = imageFromResource(res = resources, resId = R.drawable.happy_meal_small),
                         modifier = Modifier.height(300.dp),
                         contentScale = ContentScale.Crop,
                 )
