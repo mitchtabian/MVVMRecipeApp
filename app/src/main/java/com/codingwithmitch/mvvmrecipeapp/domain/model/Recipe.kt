@@ -7,16 +7,16 @@ import kotlinx.android.parcel.Parcelize
  * See Recipe example: https://food2fork.ca/
  */
 @Parcelize
-class Recipe (
-    var id: Int? = null,
-    var title: String? = null,
-    var publisher: String? = null,
-    var featuredImage: String? = null,
-    var rating: Int? = 0,
-    var sourceUrl: String? = null,
-    var description: String? = null,
-    var cookingInstructions: String? = null,
-    var ingredients: List<String>? = null,
-    var dateAdded: String? = null,
-    var dateUpdated: String? = null,
-): Parcelable
+data class Recipe (
+    val id: Int? = null,
+    val title: String? = null,
+    val publisher: String? = null,
+    val featuredImage: String? = null,
+    val rating: Int? = 0,
+    val sourceUrl: String? = null,
+    val description: String? = null,
+    val cookingInstructions: String? = null,
+    val ingredients: List<String> = listOf(),
+    val dateAdded: String? = null,
+    val dateUpdated: String? = null,
+) : Parcelable
