@@ -1,4 +1,4 @@
-package com.codingwithmitch.mvvmrecipeapp.domain
+package com.codingwithmitch.mvvmrecipeapp.domain.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
