@@ -22,7 +22,6 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.codingwithmitch.mvvmrecipeapp.R
 import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
 import com.codingwithmitch.mvvmrecipeapp.presentation.BaseApplication
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.LoadingRecipeShimmer
@@ -55,11 +54,9 @@ class RecipeFragment: Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(
-            R.layout.compose_view, container, false
-        ).apply {
-            findViewById<ComposeView>(R.id.compose_view).setContent {
+    ): View {
+        return ComposeView(requireContext()).apply {
+            setContent {
 
                 val displayProgressBar = viewModel.loading.value
 

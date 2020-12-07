@@ -9,7 +9,6 @@ import androidx.compose.foundation.ScrollableRow
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumnForIndexed
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -18,7 +17,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.savedinstancestate.savedInstanceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.ExperimentalFocus
@@ -64,13 +62,9 @@ class RecipeListFragment: Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(
-            R.layout.compose_view, container, false
-        ).apply {
-
-            findViewById<ComposeView>(R.id.compose_view).setContent {
-
+    ): View {
+        return ComposeView(requireContext()).apply {
+            setContent {
                 val displayProgressBar = viewModel.loading.value
 
                 val selectedCategory = viewModel.selectedCategory.value
@@ -92,12 +86,6 @@ class RecipeListFragment: Fragment() {
                 val genericDialogInfo = viewModel.genericDialogInfo.value
 
                 val snackbarActionLabel = stringResource(id = R.string.dismiss)
-
-//                val listState = rememberLazyListState()
-//
-//                var position = savedInstanceState { listState.firstVisibleItemScrollOffset }
-//                Log.d(TAG, "onCreateView: POSITION: ${position.value}")
-
 
 
                 AppTheme(
