@@ -1,6 +1,7 @@
 package com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,8 +17,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
-import com.codingwithmitch.mvvmrecipeapp.R
+import com.codingwithmitch.mvvmrecipeapp.util.TAG
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,7 +36,7 @@ class RecipeListFragment: Fragment() {
                 val recipes = viewModel.recipes.value
 
                 for(recipe in recipes){
-                    println("RECIPE: ${recipe.title}")
+                    Log.d(TAG, "RECIPE: ${recipe.title}")
                 }
 
                 Column(modifier = Modifier.padding(16.dp)) {
