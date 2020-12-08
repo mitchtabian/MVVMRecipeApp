@@ -12,12 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageAsset
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
 import com.codingwithmitch.mvvmrecipeapp.util.DEFAULT_RECIPE_IMAGE
 import com.codingwithmitch.mvvmrecipeapp.util.loadPicture
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlin.math.roundToInt
 
 @ExperimentalCoroutinesApi
 @Composable
@@ -42,7 +40,7 @@ fun RecipeCard(
                 val image by loadPicture(url = url, defaultImage = DEFAULT_RECIPE_IMAGE).collectAsState()
                 image?.let { img ->
                     Image(
-                            asset = img.asImageAsset(),
+                            bitmap = img.asImageAsset(), // asImageBitmap() not working
                             modifier = Modifier
                                     .fillMaxWidth()
                                     .preferredHeight(225.dp)

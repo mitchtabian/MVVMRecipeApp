@@ -9,7 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.codingwithmitch.openchat.common.framework.presentation.theme.Grey4
+import com.codingwithmitch.mvvmrecipeapp.presentation.theme.Grey4
 
 @Composable
 fun FoodCategoryChip(

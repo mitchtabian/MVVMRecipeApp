@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.codingwithmitch.mvvmrecipeapp.R
-import com.codingwithmitch.openchat.common.framework.presentation.theme.snackbarAction
+import com.codingwithmitch.mvvmrecipeapp.presentation.theme.snackbarAction
 
 /**
  * Copied from

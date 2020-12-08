@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
 import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe.RecipeEvent.GetRecipeEvent
-import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list.STATE_KEY_PAGE
 import com.codingwithmitch.mvvmrecipeapp.repository.RecipeRepository
 import com.codingwithmitch.mvvmrecipeapp.util.TAG
 import kotlinx.coroutines.ExperimentalCoroutinesApi

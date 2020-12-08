@@ -1,4 +1,4 @@
-package com.codingwithmitch.openchat.common.framework.presentation.theme
+package com.codingwithmitch.mvvmrecipeapp.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -34,12 +34,12 @@ import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
 import com.codingwithmitch.mvvmrecipeapp.presentation.BaseApplication
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.*
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.util.SnackbarController
+import com.codingwithmitch.mvvmrecipeapp.presentation.theme.AppTheme
+import com.codingwithmitch.mvvmrecipeapp.presentation.theme.Black5
+import com.codingwithmitch.mvvmrecipeapp.presentation.theme.Grey1
 import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.NewSearchEvent
 import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.NextPageEvent
 import com.codingwithmitch.mvvmrecipeapp.util.TAG
-import com.codingwithmitch.openchat.common.framework.presentation.theme.AppTheme
-import com.codingwithmitch.openchat.common.framework.presentation.theme.Black5
-import com.codingwithmitch.openchat.common.framework.presentation.theme.Grey1
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
@@ -294,8 +294,9 @@ fun SearchAppBar(
                                                 linkTo(top = parent.top, bottom = parent.bottom)
                                             },
                                     onClick = onToggleTheme,
-                                    icon = { Icon(Icons.Filled.MoreVert) },
-                            )
+                            ){
+                                Icon(Icons.Filled.MoreVert)
+                            }
                         }
                     }
                     val scrollState = rememberScrollState()

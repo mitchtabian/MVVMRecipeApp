@@ -25,9 +25,9 @@ import androidx.fragment.app.viewModels
 import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
 import com.codingwithmitch.mvvmrecipeapp.presentation.BaseApplication
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.LoadingRecipeShimmer
+import com.codingwithmitch.mvvmrecipeapp.presentation.theme.AppTheme
 import com.codingwithmitch.mvvmrecipeapp.util.DEFAULT_RECIPE_IMAGE
 import com.codingwithmitch.mvvmrecipeapp.util.loadPicture
-import com.codingwithmitch.openchat.common.framework.presentation.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
@@ -102,7 +102,7 @@ fun RecipeView(
             val image by loadPicture(url = url, defaultImage = DEFAULT_RECIPE_IMAGE).collectAsState()
             image?.let { img ->
                 Image(
-                        asset = img.asImageAsset(),
+                        bitmap = img.asImageAsset(), // asImageBitmap() not working,
                         modifier = Modifier
                                 .fillMaxWidth()
                                 .preferredHeight(IMAGE_HEIGHT.dp)

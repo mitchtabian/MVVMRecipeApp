@@ -1,4 +1,4 @@
-package com.codingwithmitch.openchat.common.framework.presentation.theme
+package com.codingwithmitch.mvvmrecipeapp.presentation.theme
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
