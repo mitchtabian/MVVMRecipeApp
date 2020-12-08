@@ -29,6 +29,7 @@ class RecipeListFragment: Fragment() {
         super.onCreate(savedInstanceState)
         println("VIEWMODEL: ${viewModel}")
         println("VIEWMODEL: repository: ${viewModel.getRepo()}")
+        println("VIEWMODEL: token: ${viewModel.getAuthToken()}")
     }
 
     override fun onCreateView(
