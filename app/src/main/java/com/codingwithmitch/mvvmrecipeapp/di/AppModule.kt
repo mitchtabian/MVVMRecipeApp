@@ -1,7 +1,7 @@
 package com.codingwithmitch.mvvmrecipeapp.di
 
 import android.content.Context
-import com.codingwithmitch.mvvmrecipeapp.BaseApplication
+import com.codingwithmitch.mvvmrecipeapp.presentation.BaseApplication
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +15,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideApplication(@ApplicationContext app: Context): BaseApplication{
+    fun provideApplication(@ApplicationContext app: Context): BaseApplication {
         return app as BaseApplication
     }
 

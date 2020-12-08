@@ -1,4 +1,4 @@
-package com.codingwithmitch.mvvmrecipeapp
+package com.codingwithmitch.mvvmrecipeapp.presentation
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

@@ -1,8 +1,8 @@
-package com.codingwithmitch.mvvmrecipeapp
+package com.codingwithmitch.mvvmrecipeapp.presentation
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.codingwithmitch.mvvmrecipeapp.R
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
