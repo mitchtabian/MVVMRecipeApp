@@ -32,6 +32,13 @@ class RecipeListFragment: Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
+
+                val recipes = viewModel.recipes.value
+
+                for(recipe in recipes){
+                    println("RECIPE: ${recipe.title}")
+                }
+
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
                         text = "RecipeList",
@@ -42,10 +49,10 @@ class RecipeListFragment: Fragment() {
                     Spacer(modifier = Modifier.padding(10.dp))
                     Button(
                         onClick = {
-                            findNavController().navigate(R.id.viewRecipe)
+                            viewModel.newSearch()
                         }
                     ) {
-                        Text(text = "TO RECIPE FRAGMENT")
+                        Text(text = "PERFORM SEARCH")
                     }
                 }
             }

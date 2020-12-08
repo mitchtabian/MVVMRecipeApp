@@ -4,8 +4,10 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
 import com.codingwithmitch.mvvmrecipeapp.repository.RecipeRepository
+import kotlinx.coroutines.launch
 import javax.inject.Named
 
 class RecipeListViewModel
@@ -17,13 +19,15 @@ constructor(
 
     val recipes: MutableState<List<Recipe>> = mutableStateOf(ArrayList())
 
-    private suspend fun newSearch(){
-        val result = repository.search(
-                token = token,
-                page = page.value,
-                query = query.value
-        )
-        recipes.value = result
+    fun newSearch(){
+        viewModelScope.launch {
+            val result = repository.search(
+                    token = token,
+                    page = 1,
+                    query = "chicken"
+            )
+            recipes.value = result
+        }
     }
 
 }
