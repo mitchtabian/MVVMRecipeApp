@@ -40,7 +40,7 @@ fun RecipeCard(
                 val image by loadPicture(url = url, defaultImage = DEFAULT_RECIPE_IMAGE).collectAsState()
                 image?.let { img ->
                     Image(
-                            bitmap = img.asImageAsset(), // asImageBitmap() not working
+                            asset = img.asImageAsset(),
                             modifier = Modifier
                                     .fillMaxWidth()
                                     .preferredHeight(225.dp)
