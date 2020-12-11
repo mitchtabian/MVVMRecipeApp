@@ -1,6 +1,6 @@
 package com.codingwithmitch.mvvmrecipeapp.network.response
 
-import com.codingwithmitch.mvvmrecipeapp.network.model.RecipeEntity
+import com.codingwithmitch.mvvmrecipeapp.network.model.RecipeNetworkEntity
 import com.google.gson.annotations.SerializedName
 
 class RecipeSearchResponse(
@@ -9,5 +9,5 @@ class RecipeSearchResponse(
     var count: Int,
 
     @SerializedName("results")
-    var recipes: List<RecipeEntity>,
+    var recipes: List<RecipeNetworkEntity>,
 )

@@ -1,7 +1,7 @@
 package com.codingwithmitch.mvvmrecipeapp.di
 
 import com.codingwithmitch.mvvmrecipeapp.network.RecipeService
-import com.codingwithmitch.mvvmrecipeapp.network.model.RecipeMapper
+import com.codingwithmitch.mvvmrecipeapp.network.model.RecipeNetworkMapper
 import com.codingwithmitch.mvvmrecipeapp.repository.RecipeRepository
 import com.codingwithmitch.mvvmrecipeapp.repository.RecipeRepository_Impl
 import dagger.Module
@@ -18,7 +18,7 @@ object RepositoryModule {
     @Provides
     fun provideRecipeRepository(
         recipeService: RecipeService,
-        recipeMapper: RecipeMapper,
+        recipeMapper: RecipeNetworkMapper,
     ): RecipeRepository{
         return RecipeRepository_Impl(
             recipeService = recipeService,
