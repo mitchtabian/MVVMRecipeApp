@@ -2,7 +2,7 @@ package com.codingwithmitch.mvvmrecipeapp.network.model
 
 import com.google.gson.annotations.SerializedName
 
-class RecipeEntity(
+class RecipeNetworkEntity(
 
     @SerializedName("pk")
     var pk: Int? = null,
