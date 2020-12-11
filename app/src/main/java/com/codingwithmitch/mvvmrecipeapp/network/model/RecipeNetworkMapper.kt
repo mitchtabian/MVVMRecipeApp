@@ -4,9 +4,9 @@ import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
 import com.codingwithmitch.mvvmrecipeapp.domain.util.EntityMapper
 
 
-class RecipeMapper : EntityMapper<RecipeEntity, Recipe> {
+class RecipeNetworkMapper : EntityMapper<RecipeNetworkEntity, Recipe> {
 
-    override fun mapFromEntity(entity: RecipeEntity): Recipe {
+    override fun mapFromEntity(entity: RecipeNetworkEntity): Recipe {
         return Recipe(
             id = entity.pk,
             title = entity.title,
@@ -22,8 +22,8 @@ class RecipeMapper : EntityMapper<RecipeEntity, Recipe> {
         )
     }
 
-    override fun mapToEntity(domainModel: Recipe): RecipeEntity {
-        return RecipeEntity(
+    override fun mapToEntity(domainModel: Recipe): RecipeNetworkEntity {
+        return RecipeNetworkEntity(
             pk = domainModel.id,
             title = domainModel.title,
             featuredImage = domainModel.featuredImage,
@@ -38,11 +38,11 @@ class RecipeMapper : EntityMapper<RecipeEntity, Recipe> {
         )
     }
 
-    fun fromEntityList(initial: List<RecipeEntity>): List<Recipe>{
+    fun fromEntityList(initial: List<RecipeNetworkEntity>): List<Recipe>{
         return initial.map { mapFromEntity(it) }
     }
 
-    fun toEntityList(initial: List<Recipe>): List<RecipeEntity>{
+    fun toEntityList(initial: List<Recipe>): List<RecipeNetworkEntity>{
         return initial.map { mapToEntity(it) }
     }
 
