@@ -4,7 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.AmbientContext
+import androidx.compose.ui.platform.ContextAmbient
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -22,7 +22,7 @@ fun loadPicture(url: String, @DrawableRes defaultImage: Int): StateFlow<Bitmap?>
     val bitmapState: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
 
     // show default image while image loads
-    Glide.with(AmbientContext.current)
+    Glide.with(ContextAmbient.current)
         .asBitmap()
         .load(defaultImage)
         .into(object : CustomTarget<Bitmap>() {
@@ -36,7 +36,7 @@ fun loadPicture(url: String, @DrawableRes defaultImage: Int): StateFlow<Bitmap?>
         })
 
     // get network image
-    Glide.with(AmbientContext.current)
+    Glide.with(ContextAmbient.current)
         .asBitmap()
         .load(url)
         .into(object : CustomTarget<Bitmap>() {
