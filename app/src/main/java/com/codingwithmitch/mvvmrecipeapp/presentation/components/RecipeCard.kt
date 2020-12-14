@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.loadImageResource
@@ -17,6 +18,8 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.codingwithmitch.mvvmrecipeapp.R
 import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
+import com.codingwithmitch.mvvmrecipeapp.util.DEFAULT_RECIPE_IMAGE
+import com.codingwithmitch.mvvmrecipeapp.util.loadPicture
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
@@ -39,13 +42,16 @@ fun RecipeCard(
 
         Column() {
             recipe.featuredImage?.let { url ->
-                Image(
-                        bitmap = imageResource(id = R.drawable.empty_plate),
-                        modifier = Modifier
-                                .fillMaxWidth()
-                                .preferredHeight(225.dp),
-                        contentScale = ContentScale.Crop,
-                )
+                val image by loadPicture(url = url, defaultImage = DEFAULT_RECIPE_IMAGE).collectAsState()
+                image?.let { img ->
+                    Image(
+                            bitmap = img.asImageBitmap(),
+                            modifier = Modifier
+                                    .fillMaxWidth()
+                                    .preferredHeight(225.dp),
+                            contentScale = ContentScale.Crop,
+                    )
+                }
             }
             recipe.title?.let { title ->
                 Row(
@@ -59,7 +65,7 @@ fun RecipeCard(
                             .fillMaxWidth(0.85f)
                             .wrapContentWidth(Alignment.Start)
                         ,
-                        style = MaterialTheme.typography.h3
+                        style = MaterialTheme.typography.h5
                     )
                     val rank = recipe.rating.toString()
                     Text(
@@ -69,7 +75,7 @@ fun RecipeCard(
                             .wrapContentWidth(Alignment.End)
                             .align(Alignment.CenterVertically)
                         ,
-                        style = MaterialTheme.typography.h5
+                        style = MaterialTheme.typography.h6
                     )
                 }
             }
