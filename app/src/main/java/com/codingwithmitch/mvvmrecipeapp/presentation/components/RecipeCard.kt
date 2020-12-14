@@ -11,7 +11,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.asImageAsset
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
@@ -42,7 +42,7 @@ fun RecipeCard(
                 val image by loadPicture(url = url, defaultImage = DEFAULT_RECIPE_IMAGE).collectAsState()
                 image?.let { img ->
                     Image(
-                            bitmap = img.asImageBitmap(),
+                            asset = img.asImageAsset(),
                             modifier = Modifier
                                     .fillMaxWidth()
                                     .preferredHeight(225.dp),
