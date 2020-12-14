@@ -44,41 +44,44 @@ class RecipeListFragment: Fragment() {
 
                 Column {
                     Surface(
+                            modifier = Modifier
+                                    .fillMaxWidth()
+                            ,
                             color = MaterialTheme.colors.secondary,
                             elevation = 8.dp,
-                    ) {
-                        Row(modifier = Modifier.fillMaxWidth()){
-                            TextField(
-                                    modifier = Modifier
-                                            .fillMaxWidth(.9f)
-                                            .padding(8.dp)
-                                    ,
-                                    value = query,
-                                    onValueChange = {
-                                        viewModel.onQueryChanged(it)
-                                    },
-                                    label = {
-                                        Text(text = "Search")
-                                    },
-                                    keyboardOptions = KeyboardOptions(
-                                            keyboardType = KeyboardType.Text,
-                                            imeAction = ImeAction.Done,
-                                    ),
-                                    leadingIcon = {
-                                        Icon(Icons.Filled.Search)
-                                    },
-                                    onImeActionPerformed = { action, softKeyboardController ->
-                                        if (action == ImeAction.Done) {
-                                            viewModel.newSearch(query)
-                                            softKeyboardController?.hideSoftwareKeyboard()
-                                        }
-                                    },
-                                    textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
-                                    backgroundColor = MaterialTheme.colors.surface
-                            )
-                        }
-                    }
-
+                            content = {
+                                Row(modifier = Modifier.fillMaxWidth()){
+                                    TextField(
+                                            modifier = Modifier
+                                                    .fillMaxWidth(.9f)
+                                                    .padding(8.dp)
+                                            ,
+                                            value = query,
+                                            onValueChange = {
+                                                viewModel.onQueryChanged(it)
+                                            },
+                                            label = {
+                                                Text(text = "Search")
+                                            },
+                                            keyboardOptions = KeyboardOptions(
+                                                    keyboardType = KeyboardType.Text,
+                                                    imeAction = ImeAction.Done,
+                                            ),
+                                            leadingIcon = {
+                                                Icon(Icons.Filled.Search)
+                                            },
+                                            onImeActionPerformed = { action, softKeyboardController ->
+                                                if (action == ImeAction.Done) {
+                                                    viewModel.newSearch(query)
+                                                    softKeyboardController?.hideSoftwareKeyboard()
+                                                }
+                                            },
+                                            textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
+                                            backgroundColor = MaterialTheme.colors.surface
+                                    )
+                                }
+                            }
+                    )
                     LazyColumnForIndexed(
                             items = recipes
                     ) { index, recipe ->
