@@ -1,8 +1,8 @@
 package com.codingwithmitch.mvvmrecipeapp.domain.util
 
-interface EntityMapper <Entity, DomainModel>{
+interface DomainMapper <T, DomainModel>{
 
-    fun mapFromEntity(entity: Entity): DomainModel
+    fun mapToDomainModel(model: T): DomainModel
 
-    fun mapToEntity(domainModel: DomainModel): Entity
+    fun mapFromDomainModel(domainModel: DomainModel): T
 }
