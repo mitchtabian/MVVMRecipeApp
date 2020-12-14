@@ -1,7 +1,7 @@
 package com.codingwithmitch.mvvmrecipeapp.di
 
 import com.codingwithmitch.mvvmrecipeapp.network.RecipeService
-import com.codingwithmitch.mvvmrecipeapp.network.model.RecipeNetworkMapper
+import com.codingwithmitch.mvvmrecipeapp.network.model.RecipeDtoMapper
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -18,8 +18,8 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideRecipeMapper(): RecipeNetworkMapper {
-        return RecipeNetworkMapper()
+    fun provideRecipeMapper(): RecipeDtoMapper {
+        return RecipeDtoMapper()
     }
 
     @Singleton
