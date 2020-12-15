@@ -47,60 +47,57 @@ class RecipeListFragment: Fragment() {
 
                 val query = mutableStateOf("Chicken")
 
-                MaterialTheme() {
-                    Column {
-                        Surface(
+                Column {
+                    Surface(
+                            modifier = Modifier
+                                    .fillMaxWidth()
+                            ,
+                            color = MaterialTheme.colors.primary,
+                            elevation = 8.dp,
+                    ){
+                        Row(
                                 modifier = Modifier
                                         .fillMaxWidth()
                                 ,
-                                color = MaterialTheme.colors.primary ,
-                                elevation = 8.dp,
                         ){
-                            Row(
+                            TextField(
                                     modifier = Modifier
-                                            .fillMaxWidth()
+                                            .fillMaxWidth(.9f)
+                                            .padding(8.dp)
                                     ,
-                            ){
-                                TextField(
-                                        modifier = Modifier
-                                                .fillMaxWidth(.9f)
-                                                .padding(8.dp)
-                                        ,
-                                        value = query.value,
-                                        onValueChange = {
-                                            query.value = it
-                                        },
-                                        label = {
-                                            Text(text = "Search")
-                                        },
-                                        keyboardOptions = KeyboardOptions(
-                                                keyboardType = KeyboardType.Text,
-                                                imeAction = ImeAction.Done,
-                                        ),
-                                        leadingIcon = {
-                                            Icon(Icons.Filled.Search)
-                                        },
-                                        onImeActionPerformed = { action, softKeyboardController ->
-                                            if (action == ImeAction.Done) {
-                                                viewModel.newSearch()
-                                                softKeyboardController?.hideSoftwareKeyboard()
-                                            }
-                                        },
-                                        textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
-                                        backgroundColor = MaterialTheme.colors.surface
-                                )
-                            }
+                                    value = query.value,
+                                    onValueChange = {
+                                        query.value = it
+                                    },
+                                    label = {
+                                        Text(text = "Search")
+                                    },
+                                    keyboardOptions = KeyboardOptions(
+                                            keyboardType = KeyboardType.Text,
+                                            imeAction = ImeAction.Done,
+                                    ),
+                                    leadingIcon = {
+                                        Icon(Icons.Filled.Search)
+                                    },
+                                    onImeActionPerformed = { action, softKeyboardController ->
+                                        if (action == ImeAction.Done) {
+                                            viewModel.newSearch()
+                                            softKeyboardController?.hideSoftwareKeyboard()
+                                        }
+                                    },
+                                    textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
+                                    backgroundColor = MaterialTheme.colors.surface
+                            )
+                        }
 
-                        }
-                        
-                        LazyColumnForIndexed(
-                                items = recipes
-                        ) { index, recipe ->
-                            RecipeCard(recipe = recipe, onClick = {})
-                        }
+                    }
+
+                    LazyColumnForIndexed(
+                            items = recipes
+                    ) { index, recipe ->
+                        RecipeCard(recipe = recipe, onClick = {})
                     }
                 }
-
             }
         }
     }
