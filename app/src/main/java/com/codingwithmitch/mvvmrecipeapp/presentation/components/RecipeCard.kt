@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageAsset
@@ -37,7 +37,7 @@ fun RecipeCard(
 
         Column() {
             recipe.featuredImage?.let { url ->
-                val image by loadPicture(url = url, defaultImage = DEFAULT_RECIPE_IMAGE).collectAsState()
+                val image = loadPicture(url = url, defaultImage = DEFAULT_RECIPE_IMAGE).value
                 image?.let { img ->
                     Image(
                             asset = img.asImageAsset(),

@@ -19,9 +19,9 @@ const val DEFAULT_RECIPE_IMAGE = R.drawable.empty_plate
 
 @ExperimentalCoroutinesApi
 @Composable
-fun loadPicture(url: String, @DrawableRes defaultImage: Int): StateFlow<Bitmap?> {
+fun loadPicture(url: String, @DrawableRes defaultImage: Int): MutableState<Bitmap?> {
 
-    val bitmapState: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
+    val bitmapState: MutableState<Bitmap?> = mutableStateOf(null)
 
     // show default image while image loads
     Glide.with(ContextAmbient.current)
@@ -60,9 +60,9 @@ fun loadPicture(url: String, @DrawableRes defaultImage: Int): StateFlow<Bitmap?>
 
 @ExperimentalCoroutinesApi
 @Composable
-fun loadPicture(drawableId: Int): StateFlow<Bitmap?> {
+fun loadPicture(drawableId: Int): MutableState<Bitmap?> {
 
-    val bitmapState: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
+    val bitmapState: MutableState<Bitmap?> = mutableStateOf(null)
 
     // get network image
     Glide.with(ContextAmbient.current)
