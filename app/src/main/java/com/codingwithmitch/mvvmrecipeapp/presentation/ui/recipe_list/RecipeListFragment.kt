@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyColumnForIndexed
 import androidx.compose.material.Button
 import androidx.compose.material.Text
@@ -39,10 +40,12 @@ class RecipeListFragment: Fragment() {
 
                 val recipes = viewModel.recipes.value
 
-                LazyColumnForIndexed(
+                LazyColumn{
+                    itemsIndexed(
                         items = recipes
-                ) { index, recipe ->
-                    RecipeCard(recipe = recipe, onClick = {})
+                    ){index, recipe ->
+                        RecipeCard(recipe = recipe, onClick = {})
+                    }
                 }
 
             }
