@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumnForIndexed
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -89,10 +89,12 @@ class RecipeListFragment: Fragment() {
 
                     }
 
-                    LazyColumnForIndexed(
+                    LazyColumn {
+                        itemsIndexed(
                             items = recipes
-                    ) { index, recipe ->
-                        RecipeCard(recipe = recipe, onClick = {})
+                        ){ index, recipe ->
+                            RecipeCard(recipe = recipe, onClick = {})
+                        }
                     }
                 }
             }

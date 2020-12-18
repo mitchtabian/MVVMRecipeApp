@@ -20,7 +20,7 @@ constructor(
     val recipes: MutableState<List<Recipe>> = mutableStateOf(ArrayList())
 
     init {
-//        newSearch()
+        newSearch()
     }
 
     fun newSearch(){
