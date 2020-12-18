@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyColumnForIndexed
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
@@ -28,10 +29,12 @@ class RecipeListFragment: Fragment() {
 
                 val recipes = viewModel.recipes.value
 
-                LazyColumnForIndexed(
+                LazyColumn {
+                    itemsIndexed(
                         items = recipes
-                ) { index, recipe ->
-                    RecipeCard(recipe = recipe, onClick = {})
+                    ){ index, recipe ->
+                        RecipeCard(recipe = recipe, onClick = {})
+                    }
                 }
 
             }
