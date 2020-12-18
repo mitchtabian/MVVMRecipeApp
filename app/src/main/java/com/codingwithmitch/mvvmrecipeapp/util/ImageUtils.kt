@@ -6,6 +6,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.platform.ContextAmbient
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
@@ -24,7 +25,7 @@ fun loadPicture(url: String, @DrawableRes defaultImage: Int): MutableState<Bitma
     val bitmapState: MutableState<Bitmap?> = mutableStateOf(null)
 
     // show default image while image loads
-    Glide.with(ContextAmbient.current)
+    Glide.with(AmbientContext.current)
             .asBitmap()
             .load(defaultImage)
             .into(object : CustomTarget<Bitmap>() {
@@ -38,7 +39,7 @@ fun loadPicture(url: String, @DrawableRes defaultImage: Int): MutableState<Bitma
             })
 
     // get network image
-    Glide.with(ContextAmbient.current)
+    Glide.with(AmbientContext.current)
             .asBitmap()
             .load(url)
             .into(object : CustomTarget<Bitmap>() {

@@ -100,7 +100,6 @@ constructor(
             }
             finally {
                 Log.d(TAG, "launchJob: finally called.")
-                loading.value = false
             }
         }
     }
@@ -108,13 +107,16 @@ constructor(
     private suspend fun restoreState(){
         loading.value = true
         // Must retrieve each page of results.
-        val results: ArrayList<Recipe> = ArrayList()
+        val results: MutableList<Recipe> = mutableListOf()
         for(p in 1..page.value){
             Log.d(TAG, "restoreState: page: ${p}, query: ${query.value}")
             val result = repository.search(token = token, page = p, query = query.value )
             results.addAll(result)
+            if(p == page.value){ // done
+                recipes.value = results
+                loading.value = false
+            }
         }
-        recipes.value = results
     }
 
     private suspend fun newSearch(){
@@ -128,20 +130,25 @@ constructor(
 
         val result = repository.search(token = token, page = page.value, query = query.value )
         recipes.value = result
+        loading.value = false
     }
 
     private suspend fun nextPage(){
-        loading.value = true
-        incrementPage()
-        Log.d(TAG, "nextPage: triggered: ${page.value}")
+        // prevent duplicate event due to recompose happening to quickly
+        if((recipeListScrollPosition + 1) >= (page.value * PAGE_SIZE) ){
+            loading.value = true
+            incrementPage()
+            Log.d(TAG, "nextPage: triggered: ${page.value}")
 
-        // just to show pagination, api is fast
-        delay(1000)
+            // just to show pagination, api is fast
+            delay(1000)
 
-        if(page.value > 1){
-            val result = repository.search(token = token, page = page.value, query = query.value )
-            Log.d(TAG, "search: appending")
-            appendRecipes(result)
+            if(page.value > 1){
+                val result = repository.search(token = token, page = page.value, query = query.value )
+                Log.d(TAG, "search: appending")
+                appendRecipes(result)
+            }
+            loading.value = false
         }
     }
 
@@ -167,9 +174,12 @@ constructor(
      * Append new recipes to the current list of recipes
      */
     private fun appendRecipes(recipes: List<Recipe>){
-        val current = this.recipes.value
-        val new = listOf(current, recipes).flatten()
-        this.recipes.value = new
+//        val current = this.recipes.value
+//        val new = listOf(current, recipes).flatten()
+//        this.recipes.value = new
+        val current = ArrayList(this.recipes.value)
+        current.addAll(recipes)
+        this.recipes.value = current
     }
 
     private fun incrementPage(){

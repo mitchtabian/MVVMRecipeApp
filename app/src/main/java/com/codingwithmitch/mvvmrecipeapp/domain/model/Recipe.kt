@@ -1,12 +1,8 @@
 package com.codingwithmitch.mvvmrecipeapp.domain.model
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
-
 /**
  * See Recipe example: https://recipesapi.herokuapp.com/api/get/?rId=47230
  */
-@Parcelize
 class Recipe (
     var id: Int? = null,
     var title: String? = null,
@@ -19,4 +15,4 @@ class Recipe (
     var ingredients: List<String>? = null,
     var dateAdded: String? = null,
     var dateUpdated: String? = null,
-): Parcelable
+)

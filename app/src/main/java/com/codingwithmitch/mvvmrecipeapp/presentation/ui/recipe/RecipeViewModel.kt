@@ -35,8 +35,8 @@ constructor(
     init {
 
         // restore if process dies
-        state.get<Recipe>(STATE_KEY_RECIPE)?.let{ recipe ->
-            this.recipe.value = recipe
+        state.get<Int>(STATE_KEY_RECIPE)?.let{ recipeId ->
+            onTriggerEvent(GetRecipeEvent(recipeId))
         }
     }
 
@@ -70,7 +70,7 @@ constructor(
         val recipe = recipeRepository.get(token=token, id=id)
         this.recipe.value = recipe
 
-        state.set(STATE_KEY_RECIPE, recipe)
+        state.set(STATE_KEY_RECIPE, recipe.id)
     }
 }
 
