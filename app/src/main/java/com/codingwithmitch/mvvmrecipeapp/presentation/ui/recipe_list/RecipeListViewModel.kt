@@ -19,6 +19,8 @@ constructor(
 
     val recipes: MutableState<List<Recipe>> = mutableStateOf(ArrayList())
 
+    val query = mutableStateOf("Chicken")
+
     init {
         newSearch()
     }
@@ -32,6 +34,10 @@ constructor(
             )
             recipes.value = result
         }
+    }
+
+    fun onQueryChanged(query: String){
+        this.query.value = query
     }
 
 }
