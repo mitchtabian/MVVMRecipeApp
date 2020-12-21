@@ -13,12 +13,10 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.codingwithmitch.mvvmrecipeapp.R
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 
 const val DEFAULT_RECIPE_IMAGE = R.drawable.empty_plate
 
-@ExperimentalCoroutinesApi
+//@ExperimentalCoroutinesApi
 @Composable
 fun loadPicture(url: String, @DrawableRes defaultImage: Int): MutableState<Bitmap?> {
 
