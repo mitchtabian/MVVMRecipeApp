@@ -102,7 +102,7 @@ class RecipeListFragment: Fragment() {
                                 for(category in getAllFoodCategories()){
                                     FoodCategoryChip(
                                             category = category.value,
-                                            isSelected = category == getFoodCategory(query),
+                                            isSelected = selectedCategory == category,
                                             onSelectedCategoryChanged = {
                                                 viewModel.onChangeCategoryScrollPosition(scrollState.value)
                                                 viewModel.onSelectedCategoryChanged(it)
