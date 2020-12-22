@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyColumnForIndexed
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -80,7 +79,7 @@ class RecipeListFragment: Fragment() {
                                         },
                                         onImeActionPerformed = { action, softKeyboardController ->
                                             if (action == ImeAction.Done) {
-                                                viewModel.newSearch(query)
+                                                viewModel.newSearch()
                                                 softKeyboardController?.hideSoftwareKeyboard()
                                             }
                                         },
@@ -100,9 +99,7 @@ class RecipeListFragment: Fragment() {
                                             onSelectedCategoryChanged = {
                                                 viewModel.onSelectedCategoryChanged(it)
                                             },
-                                            onExecuteSearch = {
-                                                viewModel.newSearch(query)
-                                            },
+                                            onExecuteSearch = viewModel::newSearch,
                                     )
                                 }
                             }

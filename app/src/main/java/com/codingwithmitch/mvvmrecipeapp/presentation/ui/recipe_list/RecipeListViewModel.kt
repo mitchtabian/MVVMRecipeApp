@@ -24,15 +24,15 @@ constructor(
     val selectedCategory: MutableState<FoodCategory?> = mutableStateOf(null)
 
     init {
-        newSearch(query.value)
+        newSearch()
     }
 
-    fun newSearch(query: String){
+    fun newSearch(){
         viewModelScope.launch {
             val result = repository.search(
                     token = token,
                     page = 1,
-                    query = query
+                    query = query.value
             )
             recipes.value = result
         }
