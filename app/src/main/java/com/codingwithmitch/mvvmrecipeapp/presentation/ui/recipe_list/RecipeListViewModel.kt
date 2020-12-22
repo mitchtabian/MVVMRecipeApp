@@ -21,6 +21,8 @@ constructor(
 
     val query = mutableStateOf("")
 
+    val selectedCategory: MutableState<FoodCategory?> = mutableStateOf(null)
+
     init {
         newSearch(query.value)
     }
@@ -38,6 +40,12 @@ constructor(
 
     fun onQueryChanged(query: String){
         this.query.value = query
+    }
+
+    fun onSelectedCategoryChanged(category: String){
+        val newCategory = getFoodCategory(category)
+        selectedCategory.value = newCategory
+        onQueryChanged(category)
     }
 }
 

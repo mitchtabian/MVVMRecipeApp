@@ -47,6 +47,8 @@ class RecipeListFragment: Fragment() {
 
                 val query = viewModel.query.value
 
+                val selectedCategory = viewModel.selectedCategory.value
+
                 Column {
                     Surface(
                             modifier = Modifier
@@ -94,9 +96,12 @@ class RecipeListFragment: Fragment() {
                                 for(category in getAllFoodCategories()){
                                     FoodCategoryChip(
                                             category = category.value,
+                                            isSelected = category == getFoodCategory(query),
+                                            onSelectedCategoryChanged = {
+                                                viewModel.onSelectedCategoryChanged(it)
+                                            },
                                             onExecuteSearch = {
-                                                viewModel.onQueryChanged(it)
-                                                viewModel.newSearch(it)
+                                                viewModel.newSearch(query)
                                             },
                                     )
                                 }
