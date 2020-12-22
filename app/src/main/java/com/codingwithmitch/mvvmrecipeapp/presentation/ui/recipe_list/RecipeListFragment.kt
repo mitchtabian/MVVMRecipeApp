@@ -16,6 +16,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -23,6 +24,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.codingwithmitch.mvvmrecipeapp.presentation.components.FoodCategoryChip
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.RecipeCard
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -50,7 +52,7 @@ class RecipeListFragment: Fragment() {
                             modifier = Modifier
                                     .fillMaxWidth()
                             ,
-                            color = MaterialTheme.colors.primary,
+                            color = Color.White,
                             elevation = 8.dp,
                     ){
                         Column{
@@ -84,13 +86,18 @@ class RecipeListFragment: Fragment() {
                                         backgroundColor = MaterialTheme.colors.surface
                                 )
                             }
-                            ScrollableRow(modifier = Modifier.fillMaxWidth()){
+                            ScrollableRow(
+                                    modifier = Modifier
+                                            .padding(start = 8.dp, bottom = 8.dp)
+                                    ,
+                            ) {
                                 for(category in getAllFoodCategories()){
-                                    Text(
-                                            text = category.value,
-                                            style = MaterialTheme.typography.body2,
-                                            color = MaterialTheme.colors.secondary,
-                                            modifier = Modifier.padding(8.dp)
+                                    FoodCategoryChip(
+                                            category = category.value,
+                                            onExecuteSearch = {
+                                                viewModel.onQueryChanged(it)
+                                                viewModel.newSearch(it)
+                                            },
                                     )
                                 }
                             }
