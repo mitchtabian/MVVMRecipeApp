@@ -63,7 +63,7 @@ class RecipeListFragment : Fragment() {
                                 RecipeCard(recipe = recipe, onClick = {})
                             }
                         }
-                        CircularIndeterminateProgressBar(isDisplayed = loading)
+                        CircularIndeterminateProgressBar(isDisplayed = loading, verticalBias = 0.3f)
                     }
 
 
