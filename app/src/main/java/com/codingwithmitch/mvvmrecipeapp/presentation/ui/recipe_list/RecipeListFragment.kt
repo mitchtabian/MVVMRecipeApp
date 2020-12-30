@@ -4,17 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.codingwithmitch.mvvmrecipeapp.presentation.components.CircularIndeterminateProgressBar
-import com.codingwithmitch.mvvmrecipeapp.presentation.components.RecipeCard
-import com.codingwithmitch.mvvmrecipeapp.presentation.components.SearchAppBar
+import com.codingwithmitch.mvvmrecipeapp.presentation.components.*
+import com.codingwithmitch.mvvmrecipeapp.presentation.components.HeartButtonState.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -25,9 +25,9 @@ class RecipeListFragment : Fragment() {
     private val viewModel: RecipeListViewModel by viewModels()
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
@@ -45,27 +45,49 @@ class RecipeListFragment : Fragment() {
                 Column {
 
                     SearchAppBar(
-                            query = query,
-                            onQueryChanged = viewModel::onQueryChanged,
-                            onExecuteSearch = viewModel::newSearch,
-                            categories = getAllFoodCategories(),
-                            selectedCategory = selectedCategory,
-                            onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
-                            scrollPosition = categoryScrollPosition,
-                            onChangeScrollPosition = viewModel::onChangeCategoryScrollPosition,
+                        query = query,
+                        onQueryChanged = viewModel::onQueryChanged,
+                        onExecuteSearch = viewModel::newSearch,
+                        categories = getAllFoodCategories(),
+                        selectedCategory = selectedCategory,
+                        onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
+                        scrollPosition = categoryScrollPosition,
+                        onChangeScrollPosition = viewModel::onChangeCategoryScrollPosition,
                     )
 
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        LazyColumn {
-                            itemsIndexed(
-                                    items = recipes
-                            ) { index, recipe ->
-                                RecipeCard(recipe = recipe, onClick = {})
-                            }
-                        }
-                        CircularIndeterminateProgressBar(isDisplayed = loading, verticalBias = 0.3f)
+                    PulsingDemo()
+
+                    val state = remember { mutableStateOf(IDLE) }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp),
+                        horizontalArrangement = Arrangement.Center
+                        ){
+
+                        AnimatedHeartButton(
+                            modifier = Modifier,
+                            buttonState = state ,
+                            onToggle = {
+                                state.value = if(state.value == IDLE) ACTIVE else IDLE
+                            },
+                            iconSize = 50.dp,
+                            expandIconSize = 80.dp
+                        )
                     }
 
+
+//                    Box(modifier = Modifier.fillMaxSize()) {
+//                        LazyColumn {
+//                            itemsIndexed(
+//                                items = recipes
+//                            ) { index, recipe ->
+//                                RecipeCard(recipe = recipe, onClick = {})
+//                            }
+//                        }
+//                        CircularIndeterminateProgressBar(isDisplayed = loading, verticalBias = 0.3f)
+//                    }
 
                 }
             }

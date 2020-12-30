@@ -14,9 +14,10 @@ import javax.inject.Named
 class RecipeListViewModel
 @ViewModelInject
 constructor(
-        private val repository: RecipeRepository,
-        private @Named("auth_token") val token: String,
-): ViewModel(){
+    private val repository: RecipeRepository,
+    private @Named("auth_token") val token: String,
+) : ViewModel() {
+
 
     val recipes: MutableState<List<Recipe>> = mutableStateOf(ArrayList())
 
@@ -32,7 +33,7 @@ constructor(
         newSearch()
     }
 
-    fun newSearch(){
+    fun newSearch() {
         viewModelScope.launch {
 
             loading.value = true
@@ -42,9 +43,9 @@ constructor(
             delay(1000)
 
             val result = repository.search(
-                    token = token,
-                    page = 1,
-                    query = query.value
+                token = token,
+                page = 1,
+                query = query.value
             )
             recipes.value = result
 
@@ -55,26 +56,26 @@ constructor(
     /**
      * Called when a new search is executed.
      */
-    private fun resetSearchState(){
+    private fun resetSearchState() {
         recipes.value = listOf()
-        if(selectedCategory.value?.value != query.value) clearSelectedCategory()
+        if (selectedCategory.value?.value != query.value) clearSelectedCategory()
     }
 
-    private fun clearSelectedCategory(){
+    private fun clearSelectedCategory() {
         selectedCategory.value = null
     }
 
-    fun onQueryChanged(query: String){
+    fun onQueryChanged(query: String) {
         this.query.value = query
     }
 
-    fun onSelectedCategoryChanged(category: String){
+    fun onSelectedCategoryChanged(category: String) {
         val newCategory = getFoodCategory(category)
         selectedCategory.value = newCategory
         onQueryChanged(category)
     }
 
-    fun onChangeCategoryScrollPosition(position: Float){
+    fun onChangeCategoryScrollPosition(position: Float) {
         categoryScrollPosition = position
     }
 }
