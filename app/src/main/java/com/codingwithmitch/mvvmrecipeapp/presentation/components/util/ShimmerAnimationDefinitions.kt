@@ -6,7 +6,8 @@ import androidx.compose.ui.unit.dp
 
 
 /**
- * Author: https://github.com/Gurupreet/ComposeCookBook/blob/master/app/src/main/java/com/guru/composecookbook/ui/Animations/AnimationDefinitions.kt
+ * Inspiration from:
+ * https://github.com/Gurupreet/ComposeCookBook/blob/master/app/src/main/java/com/guru/composecookbook/ui/Animations/AnimationDefinitions.kt
  */
 object ShimmerAnimationDefinitions {
 
