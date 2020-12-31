@@ -20,7 +20,7 @@ fun LoadingRecipeListShimmer(
         toState = END
     )
 
-    val list = listOf(
+    val colors = listOf(
         Color.LightGray.copy(alpha = .8f),
         Color.LightGray.copy(alpha = .8f),
         Color.LightGray.copy(alpha = .8f),
@@ -32,12 +32,12 @@ fun LoadingRecipeListShimmer(
     val floatValue = shimmerTranslateAnim[shimmerDpPropKey]
 
     ScrollableColumn() {
-        ShimmerRecipeCardItem(list, floatValue.value, imageHeight)
-        ShimmerRecipeCardItem(list, floatValue.value, imageHeight)
-        ShimmerRecipeCardItem(list, floatValue.value, imageHeight)
-        ShimmerRecipeCardItem(list, floatValue.value, imageHeight)
-        ShimmerRecipeCardItem(list, floatValue.value, imageHeight)
-        ShimmerRecipeCardItem(list, floatValue.value, imageHeight)
+        ShimmerRecipeCardItem(colors, floatValue.value, imageHeight)
+        ShimmerRecipeCardItem(colors, floatValue.value, imageHeight)
+        ShimmerRecipeCardItem(colors, floatValue.value, imageHeight)
+        ShimmerRecipeCardItem(colors, floatValue.value, imageHeight)
+        ShimmerRecipeCardItem(colors, floatValue.value, imageHeight)
+        ShimmerRecipeCardItem(colors, floatValue.value, imageHeight)
     }
 
 }

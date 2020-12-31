@@ -13,11 +13,11 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ShimmerRecipeCardItem(
-    lists: List<Color>,
+    colors: List<Color>,
     floatAnim: Float = 0f,
     imageHeight: Int,
 ) {
-    val brush = linearGradient(lists, start = Offset(-10f, -10f), end = Offset(floatAnim, floatAnim))
+    val brush = linearGradient(colors, start = Offset(-10f, -10f), end = Offset(floatAnim, floatAnim))
     Column(modifier = Modifier.padding(16.dp)) {
         Surface(
             shape = MaterialTheme.shapes.small,

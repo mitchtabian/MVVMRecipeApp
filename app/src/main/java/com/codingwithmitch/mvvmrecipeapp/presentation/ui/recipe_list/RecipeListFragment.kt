@@ -4,11 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
@@ -54,6 +60,31 @@ class RecipeListFragment : Fragment() {
                         scrollPosition = categoryScrollPosition,
                         onChangeScrollPosition = viewModel::onChangeCategoryScrollPosition,
                     )
+
+                    val colors = listOf(
+                        Color.Blue,
+                        Color.Red,
+                        Color.Blue,
+                    )
+                    val brush = Brush.Companion.linearGradient(
+                        colors,
+                        start = Offset((600.dp).value, (600.dp).value),
+                        end = Offset((800.dp).value, (800.dp).value)
+                    )
+                    Column(
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Surface(
+                            shape = MaterialTheme.shapes.small,
+                        ) {
+                            Spacer(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .preferredSize(500.dp)
+                                    .background(brush = brush)
+                            )
+                        }
+                    }
 
                     LoadingRecipeListShimmer(imageHeight = 250)
 
