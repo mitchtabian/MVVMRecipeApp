@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.*
-import com.codingwithmitch.mvvmrecipeapp.presentation.components.HeartButtonState.*
+import com.codingwithmitch.mvvmrecipeapp.presentation.components.HeartAnimationDefinition.HeartButtonState.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -72,8 +72,6 @@ class RecipeListFragment : Fragment() {
                             onToggle = {
                                 state.value = if(state.value == IDLE) ACTIVE else IDLE
                             },
-                            iconSize = 50.dp,
-                            expandIconSize = 80.dp
                         )
                     }
 
