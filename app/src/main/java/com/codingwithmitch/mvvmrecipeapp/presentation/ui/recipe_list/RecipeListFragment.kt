@@ -55,27 +55,7 @@ class RecipeListFragment : Fragment() {
                         onChangeScrollPosition = viewModel::onChangeCategoryScrollPosition,
                     )
 
-                    PulsingDemo()
-
-                    val state = remember { mutableStateOf(IDLE) }
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp),
-                        horizontalArrangement = Arrangement.Center
-                        ){
-
-                        AnimatedHeartButton(
-                            modifier = Modifier,
-                            buttonState = state ,
-                            onToggle = {
-                                state.value = if(state.value == IDLE) ACTIVE else IDLE
-                            },
-                            iconSize = 50.dp,
-                            expandIconSize = 80.dp
-                        )
-                    }
+                    LoadingRecipeListShimmer(imageHeight = 250)
 
 
 //                    Box(modifier = Modifier.fillMaxSize()) {
