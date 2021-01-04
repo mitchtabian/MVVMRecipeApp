@@ -14,13 +14,7 @@ class ShimmerAnimationDefinitions(
     private val animationDuration: Int = 1300,
     private val animationDelay: Int = 300
 ) {
-    var h: Float = (heightPx) * 0.40f
-    var gradientWidth: Float
-
-    init {
-        // % of the card height
-        gradientWidth = (h * tan(3.14 / 4)).toFloat()
-    }
+    var gradientWidth: Float = (0.2f * heightPx)
 
     enum class AnimationState {
         START, END
