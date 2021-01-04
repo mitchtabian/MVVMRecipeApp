@@ -70,19 +70,23 @@ class RecipeListFragment : Fragment() {
 
 //                    GradientDemo()
 
-                    LoadingRecipeListShimmer(imageHeight = 250.dp,)
+//                    LoadingRecipeListShimmer(imageHeight = 250.dp,)
 
 
-//                    Box(modifier = Modifier.fillMaxSize()) {
-//                        LazyColumn {
-//                            itemsIndexed(
-//                                items = recipes
-//                            ) { index, recipe ->
-//                                RecipeCard(recipe = recipe, onClick = {})
-//                            }
-//                        }
-//                        CircularIndeterminateProgressBar(isDisplayed = loading, verticalBias = 0.3f)
-//                    }
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        if (loading){
+                            LoadingRecipeListShimmer(imageHeight = 250.dp,)
+                        }else{
+                            LazyColumn {
+                                itemsIndexed(
+                                    items = recipes
+                                ) { index, recipe ->
+                                    RecipeCard(recipe = recipe, onClick = {})
+                                }
+                            }
+                        }
+                        CircularIndeterminateProgressBar(isDisplayed = loading, verticalBias = 0.3f)
+                    }
 
                 }
             }
