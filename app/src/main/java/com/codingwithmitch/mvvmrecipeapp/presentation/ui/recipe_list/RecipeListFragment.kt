@@ -1,6 +1,7 @@
 package com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,20 +10,26 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Brush.Companion.linearGradient
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.WithConstraints
+import androidx.compose.ui.platform.AmbientDensity
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.*
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.HeartButtonState.*
+import com.codingwithmitch.mvvmrecipeapp.util.TAG
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlin.math.tan
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
@@ -61,32 +68,9 @@ class RecipeListFragment : Fragment() {
                         onChangeScrollPosition = viewModel::onChangeCategoryScrollPosition,
                     )
 
-                    val colors = listOf(
-                        Color.Blue,
-                        Color.Red,
-                        Color.Blue,
-                    )
-                    val brush = Brush.Companion.linearGradient(
-                        colors,
-                        start = Offset((600.dp).value, (600.dp).value),
-                        end = Offset((800.dp).value, (800.dp).value)
-                    )
-                    Column(
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        Surface(
-                            shape = MaterialTheme.shapes.small,
-                        ) {
-                            Spacer(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .preferredSize(500.dp)
-                                    .background(brush = brush)
-                            )
-                        }
-                    }
+//                    GradientDemo()
 
-                    LoadingRecipeListShimmer(imageHeight = 250)
+                    LoadingRecipeListShimmer(imageHeight = 250.dp,)
 
 
 //                    Box(modifier = Modifier.fillMaxSize()) {
@@ -105,6 +89,48 @@ class RecipeListFragment : Fragment() {
         }
     }
 
+}
+
+@Composable
+fun GradientDemo(
+    heightPercentage: Float = 0.2f,
+
+){
+    WithConstraints(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        val width = with(AmbientDensity.current) { maxWidth.value.dp.toPx() }
+        val height = with(AmbientDensity.current) { maxHeight.value.dp.toPx() }
+        Log.d(TAG, "GradientDemo:  ${width}")
+        Log.d(TAG, "GradientDemo: ${height}")
+
+        val h = height * heightPercentage
+        val gradientWidth = (h * tan(3.14 / 4)).toFloat()
+        Log.d(TAG, "GradientDemo: gradientWidth: ${gradientWidth}")
+
+        val colors = listOf(
+            Color.Blue,
+            Color.Red,
+            Color.Blue,
+        )
+        val brush = linearGradient(
+            colors,
+            start = Offset(0f, 0f),
+            end = Offset(gradientWidth, gradientWidth)
+        )
+        Column(
+        ) {
+            Surface(
+                shape = MaterialTheme.shapes.small,
+            ) {
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(brush = brush)
+                )
+            }
+        }
+    }
 }
 
 

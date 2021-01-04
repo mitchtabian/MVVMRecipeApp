@@ -9,52 +9,55 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush.Companion.linearGradient
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.WithConstraints
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun ShimmerRecipeCardItem(
     colors: List<Color>,
-    floatAnim: Float = 0f,
-    imageHeight: Int,
+    xShimmer: Float,
+    yShimmer: Float,
+    cardHeight: Dp,
+    gradientWidth: Float,
+    padding: Dp
 ) {
-    val brush = linearGradient(colors, start = Offset(-10f, -10f), end = Offset(floatAnim, floatAnim))
-    Column(modifier = Modifier.padding(16.dp)) {
-        Surface(
-            shape = MaterialTheme.shapes.small,
-        ) {
-            Spacer(
+    WithConstraints(
+        modifier = Modifier.fillMaxSize()
+    ) {
+
+        val brush = linearGradient(
+            colors,
+            start = Offset(xShimmer - gradientWidth, yShimmer - gradientWidth),
+            end = Offset(xShimmer, yShimmer)
+        )
+        Column(modifier = Modifier.padding(padding)) {
+            Surface(
+                shape = MaterialTheme.shapes.small,
+            ) {
+                Spacer(
                     modifier = Modifier
-                            .fillMaxWidth()
-                            .preferredSize(imageHeight.dp)
-                            .background(brush = brush)
-            )
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Surface(
+                        .fillMaxWidth()
+                        .preferredSize(cardHeight)
+                        .background(brush = brush)
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Surface(
                 shape = MaterialTheme.shapes.small,
                 modifier = Modifier
-                        .padding(vertical = 8.dp)
-        ) {
-            Spacer(
+                    .padding(vertical = 8.dp)
+            ) {
+                Spacer(
                     modifier = Modifier
-                            .fillMaxWidth()
-                            .preferredHeight(15.dp)
-                            .background(brush = brush)
-            )
-        }
-        Surface(
-                shape = MaterialTheme.shapes.small,
-                modifier = Modifier
-                        .padding(vertical = 8.dp)
-        ) {
-            Spacer(
-                    modifier = Modifier
-                            .fillMaxWidth()
-                            .preferredHeight(15.dp)
-                            .background(brush = brush)
-            )
+                        .fillMaxWidth()
+                        .preferredHeight(cardHeight / 10)
+                        .background(brush = brush)
+                )
+            }
         }
     }
+
 }
 
 

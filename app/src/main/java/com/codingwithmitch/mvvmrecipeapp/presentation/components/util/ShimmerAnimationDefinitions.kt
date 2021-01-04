@@ -1,31 +1,58 @@
 package com.codingwithmitch.mvvmrecipeapp.presentation.components.util
 
-import androidx.compose.animation.DpPropKey
 import androidx.compose.animation.core.*
-import androidx.compose.ui.unit.dp
+import kotlin.math.tan
 
 
 /**
  * Inspiration from:
  * https://github.com/Gurupreet/ComposeCookBook/blob/master/app/src/main/java/com/guru/composecookbook/ui/Animations/AnimationDefinitions.kt
  */
-object ShimmerAnimationDefinitions {
+class ShimmerAnimationDefinitions(
+    private val widthPx: Float,
+    private val heightPx: Float,
+    private val animationDuration: Int = 1300,
+    private val animationDelay: Int = 300
+) {
+    var h: Float = (heightPx) * 0.40f
+    var gradientWidth: Float
+
+    init {
+        // % of the card height
+        gradientWidth = (h * tan(3.14 / 4)).toFloat()
+    }
 
     enum class AnimationState {
         START, END
     }
 
-    val shimmerDpPropKey = DpPropKey("shimmerDp")
+    val xShimmerPropKey = FloatPropKey("xShimmer")
+    val yShimmerPropKey = FloatPropKey("yShimmer")
 
     val shimmerTranslateAnimation = transitionDefinition<AnimationState> {
-        state(AnimationState.START) { this[shimmerDpPropKey] = 0.dp }
-        state(AnimationState.END) { this[shimmerDpPropKey] = 5000.dp }
+        state(AnimationState.START) {
+            this[xShimmerPropKey] = 0f
+            this[yShimmerPropKey] = 0f
+        }
+        state(AnimationState.END) {
+            this[xShimmerPropKey] =  widthPx + gradientWidth
+            this[yShimmerPropKey] = heightPx + gradientWidth
+        }
 
         transition(AnimationState.START, AnimationState.END) {
-            shimmerDpPropKey using infiniteRepeatable(
+            xShimmerPropKey using infiniteRepeatable(
                 animation = tween(
-                    durationMillis = 1800,
+                    durationMillis = animationDuration,
                     easing = LinearEasing,
+                    delayMillis = animationDelay
+                ),
+                repeatMode = RepeatMode.Restart
+            )
+            yShimmerPropKey using infiniteRepeatable(
+                animation = tween(
+                    durationMillis = animationDuration,
+                    easing = LinearEasing,
+                    delayMillis = animationDelay
                 ),
                 repeatMode = RepeatMode.Restart
             )
