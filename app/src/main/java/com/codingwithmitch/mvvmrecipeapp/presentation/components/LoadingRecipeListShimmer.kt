@@ -20,7 +20,6 @@ fun LoadingRecipeListShimmer(
         imageHeight: Dp,
         padding: Dp = 16.dp
 ){
-
     WithConstraints(
         modifier = Modifier.fillMaxSize()
     ) {
