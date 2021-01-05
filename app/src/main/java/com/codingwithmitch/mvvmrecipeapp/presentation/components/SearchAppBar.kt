@@ -1,16 +1,15 @@
 package com.codingwithmitch.mvvmrecipeapp.presentation.components
 
 import androidx.compose.foundation.ScrollableRow
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -29,12 +28,13 @@ fun SearchAppBar(
         onSelectedCategoryChanged: (String) -> Unit,
         scrollPosition: Float,
         onChangeScrollPosition: (Float) -> Unit,
+        onToggleTheme: () -> Unit,
 ){
     Surface(
             modifier = Modifier
                     .fillMaxWidth()
             ,
-            color = Color.White,
+            color = MaterialTheme.colors.secondary,
             elevation = 8.dp,
     ){
         Column{
@@ -67,6 +67,22 @@ fun SearchAppBar(
                         textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
                         backgroundColor = MaterialTheme.colors.surface
                 )
+                ConstraintLayout(
+                    modifier = Modifier.align(Alignment.CenterVertically)
+                ) {
+                    val (menu) = createRefs()
+                    IconButton(
+                        modifier = Modifier
+                            .constrainAs(menu) {
+                                end.linkTo(parent.end)
+                                linkTo(top = parent.top, bottom = parent.bottom)
+                            },
+                        onClick = onToggleTheme
+                        ,
+                    ){
+                        Icon(Icons.Filled.MoreVert)
+                    }
+                }
             }
             val scrollState = rememberScrollState()
             ScrollableRow(
