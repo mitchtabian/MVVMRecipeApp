@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.MaterialTheme
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
@@ -54,7 +56,9 @@ class RecipeListFragment : Fragment() {
 
                     val loading = viewModel.loading.value
 
-                    Column {
+                    Column(
+                        modifier = Modifier.background(color = MaterialTheme.colors.surface)
+                    ) {
 
                         SearchAppBar(
                             query = query,
