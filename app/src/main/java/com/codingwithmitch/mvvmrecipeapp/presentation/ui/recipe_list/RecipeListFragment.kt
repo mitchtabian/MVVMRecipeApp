@@ -1,19 +1,14 @@
 package com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list
 
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.AmbientConfiguration
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
@@ -23,7 +18,7 @@ import com.codingwithmitch.mvvmrecipeapp.presentation.components.CircularIndeter
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.LoadingRecipeListShimmer
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.RecipeCard
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.SearchAppBar
-import com.codingwithmitch.mvvmrecipeapp.presentation.theme.*
+import com.codingwithmitch.mvvmrecipeapp.presentation.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
