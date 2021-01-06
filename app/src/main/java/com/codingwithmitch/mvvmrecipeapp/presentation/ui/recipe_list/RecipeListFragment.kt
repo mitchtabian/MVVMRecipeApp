@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
@@ -169,9 +170,7 @@ class RecipeListFragment : Fragment() {
 fun DecoupledSnackbarDemo(
     snackbarHostState: SnackbarHostState
 ){
-    ConstraintLayout(
-        modifier = Modifier.fillMaxSize()
-    ) {
+    ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         val snackbar = createRef()
         SnackbarHost(
             modifier = Modifier.constrainAs(snackbar) {
@@ -183,22 +182,24 @@ fun DecoupledSnackbarDemo(
             snackbar = {
                 Snackbar(
                     action = {
-                        TextButton(onClick = {
-                            snackbarHostState.currentSnackbarData?.dismiss()
-                        }) {
+                        TextButton(
+                            onClick = {
+                                snackbarHostState.currentSnackbarData?.dismiss()
+                            }
+                        ){
                             Text(
-                                text = "Hide",
+                                text = snackbarHostState.currentSnackbarData?.actionLabel?: "",
+                                style = TextStyle(color = Color.White)
                             )
                         }
                     }
                 ) {
-                    Text("hey look a snackbar")
+                    Text(snackbarHostState.currentSnackbarData?.message?: "")
                 }
             }
         )
     }
 }
-
 
 @Composable
 fun SimpleSnackbarDemo(
