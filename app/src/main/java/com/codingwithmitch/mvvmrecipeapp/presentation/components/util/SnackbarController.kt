@@ -20,12 +20,13 @@ constructor(
         private val scope: CoroutineScope
 ){
 
-    //    private val scope: CoroutineScope = CoroutineScope(Main)
     private var snackbarJob: Job? = null
 
     init {
         cancelActiveJob()
     }
+
+    fun getScope() = scope
 
     fun showSnackbar(
             scaffoldState: ScaffoldState,

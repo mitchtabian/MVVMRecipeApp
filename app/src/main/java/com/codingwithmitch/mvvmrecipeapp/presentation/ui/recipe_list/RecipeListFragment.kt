@@ -71,7 +71,7 @@ class RecipeListFragment : Fragment() {
                                 onQueryChanged = viewModel::onQueryChanged,
                                 onExecuteSearch = {
                                     if (viewModel.selectedCategory.value?.value == "Milk"){
-                                        lifecycleScope.launch {
+                                        snackbarController.getScope().launch {
                                             snackbarController.showSnackbar(
                                                 scaffoldState = scaffoldState,
                                                 message = "Invalid category: MILK",
