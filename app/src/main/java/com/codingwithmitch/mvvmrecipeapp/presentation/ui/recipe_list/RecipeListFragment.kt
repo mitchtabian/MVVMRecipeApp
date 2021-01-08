@@ -9,8 +9,6 @@ import androidx.compose.foundation.ScrollableRow
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyColumnForIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -110,7 +108,7 @@ class RecipeListFragment: Fragment() {
                                         onError = {
 
                                             // Can use a snackbar or dialog here. Your choice.
-                                            snackbarController.handleSnackbarError(
+                                            snackbarController.showSnackbar(
                                                     scaffoldState = scaffoldState,
                                                     message = it,
                                                     actionLabel = snackbarActionLabel
@@ -158,7 +156,7 @@ class RecipeListFragment: Fragment() {
                                             findNavController().navigate(R.id.viewRecipe, bundle)
                                         },
                                         onError = {
-                                            snackbarController.handleSnackbarError(
+                                            snackbarController.showSnackbar(
                                                     scaffoldState = scaffoldState,
                                                     message = it,
                                                     actionLabel = snackbarActionLabel
@@ -166,7 +164,7 @@ class RecipeListFragment: Fragment() {
                                         },
                                         onChangeScrollPosition = viewModel::onChangeRecipeScrollPosition,
                                 )
-                                ErrorSnackbar(
+                                DefaultSnackbar(
                                         snackbarHostState = scaffoldState.snackbarHostState,
                                         onDismiss = { scaffoldState.snackbarHostState.currentSnackbarData?.dismiss() },
                                         modifier = Modifier.align(Alignment.BottomCenter)

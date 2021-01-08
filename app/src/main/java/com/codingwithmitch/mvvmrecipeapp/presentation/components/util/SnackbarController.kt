@@ -26,7 +26,7 @@ constructor(){
     private val snackbarScope: CoroutineScope = CoroutineScope(Main)
     private var snackbarJob: Job? = null
 
-    fun handleSnackbarError(
+    fun showSnackbar(
         scaffoldState: ScaffoldState,
         message: String,
         actionLabel: String
