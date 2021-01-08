@@ -1,47 +1,41 @@
 package com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBalanceWallet
-import androidx.compose.material.icons.filled.BrokenImage
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.codingwithmitch.mvvmrecipeapp.presentation.BaseApplication
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.*
+import com.codingwithmitch.mvvmrecipeapp.presentation.components.util.SnackbarController
 import com.codingwithmitch.mvvmrecipeapp.presentation.theme.AppTheme
-import com.codingwithmitch.mvvmrecipeapp.util.TAG
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
-import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@ExperimentalMaterialApi
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class RecipeListFragment : Fragment() {
 
     @Inject
     lateinit var application: BaseApplication
+
+    private val snackbarController = SnackbarController(lifecycleScope)
 
     private val viewModel: RecipeListViewModel by viewModels()
 
@@ -70,8 +64,6 @@ class RecipeListFragment : Fragment() {
 
                     val scaffoldState = rememberScaffoldState()
 
-                    val scope = rememberCoroutineScope()
-
                     Scaffold(
                         topBar = {
                             SearchAppBar(
@@ -79,8 +71,9 @@ class RecipeListFragment : Fragment() {
                                 onQueryChanged = viewModel::onQueryChanged,
                                 onExecuteSearch = {
                                     if (viewModel.selectedCategory.value?.value == "Milk"){
-                                        scope.launch {
-                                            scaffoldState.snackbarHostState.showSnackbar(
+                                        lifecycleScope.launch {
+                                            snackbarController.showSnackbar(
+                                                scaffoldState = scaffoldState,
                                                 message = "Invalid category: MILK",
                                                 actionLabel = "Hide"
                                             )
@@ -104,28 +97,29 @@ class RecipeListFragment : Fragment() {
                         },
 
                     ) {
-                        Box(modifier = Modifier
-                            .background(color = MaterialTheme.colors.surface)
-                        ) {
-                            if (loading){
-                                LoadingRecipeListShimmer(imageHeight = 250.dp,)
-                            }else{
-                                LazyColumn {
-                                    itemsIndexed(
-                                        items = recipes
-                                    ) { index, recipe ->
-                                        RecipeCard(recipe = recipe, onClick = {})
+                            Box(modifier = Modifier
+                                .background(color = MaterialTheme.colors.surface)
+                            ) {
+                                if (loading){
+                                    LoadingRecipeListShimmer(imageHeight = 250.dp,)
+                                }else{
+                                    LazyColumn {
+                                        itemsIndexed(
+                                            items = recipes
+                                        ) { index, recipe ->
+                                            RecipeCard(recipe = recipe, onClick = {})
+                                        }
                                     }
                                 }
+                                CircularIndeterminateProgressBar(isDisplayed = loading, verticalBias = 0.3f)
+                                DefaultSnackbar(
+                                    snackbarHostState = scaffoldState.snackbarHostState,
+                                    onDismiss = {
+                                        scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
+                                    },
+                                    modifier = Modifier.align(Alignment.BottomCenter)
+                                )
                             }
-                            CircularIndeterminateProgressBar(isDisplayed = loading, verticalBias = 0.3f)
-                            DefaultSnackbar(
-                                snackbarHostState = scaffoldState.snackbarHostState,
-                                onDismiss = {
-                                    scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
-                                }
-                            )
-                        }
                     }
                 }
             }
