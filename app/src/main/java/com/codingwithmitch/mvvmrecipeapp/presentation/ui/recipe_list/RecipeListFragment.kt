@@ -83,7 +83,7 @@ class RecipeListFragment : Fragment() {
                                         }
                                     }
                                     else{
-                                        viewModel.onTriggerEvent(NewSearchEvent())
+                                        viewModel.onTriggerEvent(NewSearchEvent)
                                     }
                                 },
                                 categories = getAllFoodCategories(),
@@ -112,7 +112,7 @@ class RecipeListFragment : Fragment() {
                                         ) { index, recipe ->
                                             viewModel.onChangeRecipeScrollPosition(index)
                                             if((index + 1) >= (page * PAGE_SIZE) && !loading){
-                                                viewModel.onTriggerEvent(NextPageEvent())
+                                                viewModel.onTriggerEvent(NextPageEvent)
                                             }
                                             RecipeCard(recipe = recipe, onClick = {})
                                         }
