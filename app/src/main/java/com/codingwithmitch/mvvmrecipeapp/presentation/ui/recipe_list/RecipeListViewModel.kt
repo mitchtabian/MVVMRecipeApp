@@ -40,7 +40,7 @@ constructor(
     var recipeListScrollPosition = 0
 
     init {
-        onTriggerEvent(NewSearchEvent())
+        onTriggerEvent(NewSearchEvent)
     }
 
     fun onTriggerEvent(event: RecipeListEvent){
