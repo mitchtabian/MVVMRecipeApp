@@ -7,6 +7,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.codingwithmitch.mvvmrecipeapp.domain.model.Recipe
+import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.*
 import com.codingwithmitch.mvvmrecipeapp.repository.RecipeRepository
 import com.codingwithmitch.mvvmrecipeapp.util.TAG
 import kotlinx.coroutines.delay
@@ -39,47 +40,63 @@ constructor(
     var recipeListScrollPosition = 0
 
     init {
-        newSearch()
+        onTriggerEvent(NewSearchEvent())
     }
 
-    fun newSearch() {
+    fun onTriggerEvent(event: RecipeListEvent){
         viewModelScope.launch {
-
-            loading.value = true
-
-            resetSearchState()
-
-            delay(2000)
-
-            val result = repository.search(
-                token = token,
-                page = 1,
-                query = query.value
-            )
-            recipes.value = result
-
-            loading.value = false
+            try {
+                when(event){
+                    is NewSearchEvent -> {
+                        newSearch()
+                    }
+                    is NextPageEvent -> {
+                        nextPage()
+                    }
+                }
+            }catch (e: Exception){
+                Log.e(TAG, "launchJob: Exception: ${e}, ${e.cause}")
+                e.printStackTrace()
+            }
+            finally {
+                Log.d(TAG, "launchJob: finally called.")
+            }
         }
     }
 
-    fun nextPage(){
-        viewModelScope.launch {
-            // prevent duplicate event due to recompose happening to quickly
-            if((recipeListScrollPosition + 1) >= (page.value * PAGE_SIZE) ){
-                loading.value = true
-                incrementPage()
-                Log.d(TAG, "nextPage: triggered: ${page.value}")
+    private suspend fun newSearch() {
+        loading.value = true
 
-                // just to show pagination, api is fast
-                delay(1000)
+        resetSearchState()
 
-                if(page.value > 1){
-                    val result = repository.search(token = token, page = page.value, query = query.value )
-                    Log.d(TAG, "search: appending")
-                    appendRecipes(result)
-                }
-                loading.value = false
+        delay(2000)
+
+        val result = repository.search(
+            token = token,
+            page = 1,
+            query = query.value
+        )
+        recipes.value = result
+
+        loading.value = false
+    }
+
+    private suspend fun nextPage(){
+        // prevent duplicate event due to recompose happening to quickly
+        if((recipeListScrollPosition + 1) >= (page.value * PAGE_SIZE) ){
+            loading.value = true
+            incrementPage()
+            Log.d(TAG, "nextPage: triggered: ${page.value}")
+
+            // just to show pagination, api is fast
+            delay(1000)
+
+            if(page.value > 1){
+                val result = repository.search(token = token, page = page.value, query = query.value )
+                Log.d(TAG, "search: appending")
+                appendRecipes(result)
             }
+            loading.value = false
         }
     }
 
