@@ -12,7 +12,6 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.codingwithmitch.mvvmrecipeapp.presentation.BaseApplication
-import com.codingwithmitch.mvvmrecipeapp.presentation.components.CircularIndeterminateProgressBar
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.LoadingRecipeShimmer
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.RecipeView
 import com.codingwithmitch.mvvmrecipeapp.presentation.theme.AppTheme
