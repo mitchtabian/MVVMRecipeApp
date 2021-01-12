@@ -1,3 +1,5 @@
+package com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,10 +14,11 @@ import com.codingwithmitch.mvvmrecipeapp.presentation.BaseApplication
 import com.codingwithmitch.mvvmrecipeapp.presentation.components.RecipeView
 import com.codingwithmitch.mvvmrecipeapp.presentation.theme.AppTheme
 import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe.RecipeEvent.GetRecipeEvent
-import com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe.RecipeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
+
+const val IMAGE_HEIGHT = 260
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
