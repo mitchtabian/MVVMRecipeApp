@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.ui.platform.ComposeView
@@ -22,6 +23,7 @@ import javax.inject.Inject
 
 const val IMAGE_HEIGHT = 260
 
+@ExperimentalMaterialApi
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class RecipeFragment: Fragment() {
@@ -50,11 +52,13 @@ class RecipeFragment: Fragment() {
 
                 val recipe = viewModel.recipe.value
 
-                AppTheme(
-                    darkTheme = application.isDark.value,
-                ){
-                    val scaffoldState = rememberScaffoldState()
+                val scaffoldState = rememberScaffoldState()
 
+                AppTheme(
+                    displayProgressBar = loading,
+                    scaffoldState = scaffoldState,
+                    darkTheme = application.isDark.value,
+                ) {
                     Scaffold(
                         scaffoldState = scaffoldState,
                         snackbarHost = {
@@ -67,7 +71,6 @@ class RecipeFragment: Fragment() {
                                 recipe = it,
                             )
                         }
-                        CircularIndeterminateProgressBar(isDisplayed = loading, verticalBias = 0.3f)
                     }
                 }
             }
