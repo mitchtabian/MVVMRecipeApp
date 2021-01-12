@@ -1,7 +1,6 @@
 package com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +13,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import com.codingwithmitch.mvvmrecipeapp.util.TAG
 
 class RecipeFragment: Fragment() {
 
