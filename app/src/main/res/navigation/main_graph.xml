@@ -10,12 +10,12 @@
         android:label="RecipeListFragment">
         <action
             android:id="@+id/viewRecipe"
-            app:destination="@id/recipeFragment">
-
-        </action>
+            app:destination="@id/recipeFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/recipeFragment"
         android:name="com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe.RecipeFragment"
-        android:label="RecipeFragment" />
+        android:label="RecipeFragment">
+    </fragment>
 </navigation>

@@ -33,7 +33,6 @@ constructor(
     val loading = mutableStateOf(false)
 
     init {
-
         // restore if process dies
         state.get<Int>(STATE_KEY_RECIPE)?.let{ recipeId ->
             onTriggerEvent(GetRecipeEvent(recipeId))
@@ -54,10 +53,6 @@ constructor(
                 Log.e(TAG, "launchJob: Exception: ${e}, ${e.cause}")
                 e.printStackTrace()
             }
-            finally {
-                Log.d(TAG, "launchJob: finally called.")
-                loading.value = false
-            }
         }
     }
 
@@ -71,25 +66,7 @@ constructor(
         this.recipe.value = recipe
 
         state.set(STATE_KEY_RECIPE, recipe.id)
+
+        loading.value = false
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

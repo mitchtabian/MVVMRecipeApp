@@ -2,10 +2,7 @@
 
     <!-- Nothing here matters EXCEPT THE STATUS BAR COLOR. The theme is obtained from [Theme.kt] -->
     <style name="Theme.MVVMRecipeApp" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>
-
 
         <item name="android:statusBarColor" tools:targetApi="l">@color/blue_800</item>
     </style>

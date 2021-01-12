@@ -8,8 +8,8 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.codingwithmitch.mvvmrecipeapp.presentation.theme.Grey4
 
 @Composable
 fun FoodCategoryChip(
@@ -17,38 +17,38 @@ fun FoodCategoryChip(
     isSelected: Boolean = false,
     onSelectedCategoryChanged: (String) -> Unit,
     onExecuteSearch: () -> Unit,
-    onError: (String) -> Unit,
 ){
     Surface(
-        modifier = Modifier.padding(end = 8.dp),
-        elevation = 8.dp,
-        shape = MaterialTheme.shapes.large
+            modifier = Modifier.padding(end = 8.dp),
+            elevation = 8.dp,
+            shape = MaterialTheme.shapes.medium,
+            color = if(isSelected) Color.LightGray else MaterialTheme.colors.primary
     ) {
         Row(modifier = Modifier
-            .toggleable(
-                value = isSelected,
-                onValueChange = {
-                    // for testing, force an error
-                    if(category == "Milk"){
-                        onError("Invalid category")
-                    }
-                    else{
-                        onSelectedCategoryChanged(category)
-                        onExecuteSearch()
-                    }
-                }
-            )
+                .toggleable(
+                        value = isSelected,
+                        onValueChange = {
+                            onSelectedCategoryChanged(category)
+                            onExecuteSearch()
+                        }
+                )
         ) {
-            Surface(
-                color = if(isSelected) Grey4 else MaterialTheme.colors.primary,
-            ) {
-                Text(
+            Text(
                     text = category,
                     style = MaterialTheme.typography.body2,
-                    color = MaterialTheme.colors.secondary,
+                    color = Color.White,
                     modifier = Modifier.padding(8.dp)
-                )
-            }
+            )
         }
     }
 }
+
+
+
+
+
+
+
+
+
+

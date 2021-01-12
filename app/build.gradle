@@ -17,11 +17,6 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
-    buildFeatures {
-        compose true
-    }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -43,6 +38,11 @@ android {
         def kotlin_compiler_extension_version = "1.0.0-alpha09"
         kotlinCompilerExtensionVersion kotlin_compiler_extension_version
     }
+    buildFeatures {
+        compose true
+    }
+
+
 }
 
 dependencies {
@@ -70,11 +70,17 @@ dependencies {
     implementation "androidx.compose.material:material:$compose"
     implementation "androidx.compose.material:material-icons-core:$compose"
     implementation "androidx.compose.material:material-icons-extended:$compose"
+    def nav_version = "2.3.2"
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+    def retrofit = "2.9.0"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit"
 
     def hilt = "2.28-alpha"
     implementation "com.google.dagger:hilt-android:$hilt"
     kapt "com.google.dagger:hilt-android-compiler:$hilt"
-
 
     def hilt_lifecycle_viewmodel = "1.0.0-alpha01"
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_lifecycle_viewmodel"
@@ -83,17 +89,6 @@ dependencies {
     def glide = "4.11.0"
     implementation "com.github.bumptech.glide:glide:$glide"
     kapt "com.github.bumptech.glide:compiler:$glide"
-
-    def retrofit = "2.9.0"
-    implementation "com.squareup.retrofit2:retrofit:$retrofit"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit"
-
-    def navigation = "2.3.1"
-    implementation "androidx.navigation:navigation-fragment-ktx:$navigation"
-    implementation "androidx.navigation:navigation-ui-ktx:$navigation"
-
-    def leak_canary = "2.5"
-    implementation "com.squareup.leakcanary:leakcanary-android:$leak_canary"
 
 }
 
