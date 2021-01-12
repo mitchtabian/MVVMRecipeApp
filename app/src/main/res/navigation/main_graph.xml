@@ -16,5 +16,6 @@
     <fragment
         android:id="@+id/recipeFragment"
         android:name="com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe.RecipeFragment"
-        android:label="RecipeFragment" />
+        android:label="RecipeFragment">
+    </fragment>
 </navigation>

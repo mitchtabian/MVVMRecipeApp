@@ -1,6 +1,7 @@
 package com.codingwithmitch.mvvmrecipeapp.presentation.ui.recipe
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +14,19 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.codingwithmitch.mvvmrecipeapp.util.TAG
 
 class RecipeFragment: Fragment() {
+
+    private var recipeId: Int = -1
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.getInt("recipeId")?.let { recipeId ->
+            this.recipeId = recipeId
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,7 +37,7 @@ class RecipeFragment: Fragment() {
             setContent {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = "This is Recipe Fragment",
+                        text = "Selected recipeId: ${recipeId}",
                         style = TextStyle(
                             fontSize = TextUnit.Sp(21)
                         )
