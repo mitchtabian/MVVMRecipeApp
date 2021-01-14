@@ -1,6 +1,8 @@
 # What is this project?
 This course will replace my old java mvvm introduction: [https://codingwithmitch.com/courses/rest-api-mvvm-retrofit2/](https://codingwithmitch.com/courses/rest-api-mvvm-retrofit2/).
 
+**Watch the new course here**: [https://codingwithmitch.com/courses/jetpack-compose-mvvm-for-beginners/](https://codingwithmitch.com/courses/jetpack-compose-mvvm-for-beginners/)
+
 **This is a beginner course.**
 
 # Main Features
@@ -44,7 +46,7 @@ This course will replace my old java mvvm introduction: [https://codingwithmitch
 	1. Tons of other useful properties. Check out the flow [docs](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/).
 1. StateFlow
 	1. StateFlow is the newest addition to kotlinx.coroutines.flow. Simply put StateFlow is a flow with special properties.
-	1. Originally I had planned to use StateFlow in this course but it's really just totally unnecessary. I don't want to show you an unrealistic example of how to use something so I'm stinking with the very simple [MutableState](https://developer.android.com/reference/kotlin/androidx/compose/runtime/MutableState) in viewmodels.
+	1. Originally I had planned to use StateFlow in this course but it's really just totally unnecessary. I don't want to show you an unrealistic example of how to use something so I'm sticking with the very simple [MutableState](https://developer.android.com/reference/kotlin/androidx/compose/runtime/MutableState) in viewmodels.
 
 
 
