@@ -22,7 +22,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 fun RecipeCard(
     recipe: Recipe,
     onClick: () -> Unit,
-){
+) {
     Card(
         shape = MaterialTheme.shapes.small,
         modifier = Modifier
@@ -36,44 +36,41 @@ fun RecipeCard(
     ) {
 
         Column() {
-            recipe.featuredImage?.let { url ->
-                val image = loadPicture(url = url, defaultImage = DEFAULT_RECIPE_IMAGE).value
-                image?.let { img ->
-                    Image(
-                            bitmap = img.asImageBitmap(),
-                            modifier = Modifier
-                                    .fillMaxWidth()
-                                    .preferredHeight(225.dp),
-                            contentScale = ContentScale.Crop,
-                    )
-                }
-            }
-            recipe.title?.let { title ->
-                Row(
+            val image = loadPicture(url = recipe.featuredImage, defaultImage = DEFAULT_RECIPE_IMAGE).value
+            image?.let { img ->
+                Image(
+                    bitmap = img.asImageBitmap(),
+                    contentDescription = "Recipe Featured Image",
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top=12.dp, bottom=12.dp, start = 8.dp, end=8.dp)
-                ){
-                    Text(
-                        text = title,
-                        modifier = Modifier
-                            .fillMaxWidth(0.85f)
-                            .wrapContentWidth(Alignment.Start)
-                        ,
-                        style = MaterialTheme.typography.h3
-                    )
-                    val rank = recipe.rating.toString()
-                    Text(
-                        text = rank,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentWidth(Alignment.End)
-                            .align(Alignment.CenterVertically)
-                        ,
-                        style = MaterialTheme.typography.h5
-                    )
-                }
+                        .preferredHeight(225.dp),
+                    contentScale = ContentScale.Crop,
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp, bottom = 12.dp, start = 8.dp, end = 8.dp)
+            ) {
+                Text(
+                    text = recipe.title,
+                    modifier = Modifier
+                        .fillMaxWidth(0.85f)
+                        .wrapContentWidth(Alignment.Start),
+                    style = MaterialTheme.typography.h3
+                )
+                val rank = recipe.rating.toString()
+                Text(
+                    text = rank,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth(Alignment.End)
+                        .align(Alignment.CenterVertically),
+                    style = MaterialTheme.typography.h5
+                )
             }
         }
     }
 }
+
+

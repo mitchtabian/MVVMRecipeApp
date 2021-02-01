@@ -38,8 +38,6 @@ constructor(
 
     val selectedCategory: MutableState<FoodCategory?> = mutableStateOf(null)
 
-    var categoryScrollPosition: Float = 0f
-
     val loading = mutableStateOf(false)
 
     // Pagination starts at '1' (-1 = exhausted)
@@ -187,10 +185,6 @@ constructor(
         val newCategory = getFoodCategory(category)
         setSelectedCategory(newCategory)
         onQueryChanged(category)
-    }
-
-    fun onChangeCategoryScrollPosition(position: Float) {
-        categoryScrollPosition = position
     }
 
     private fun setListScrollPosition(position: Int){
