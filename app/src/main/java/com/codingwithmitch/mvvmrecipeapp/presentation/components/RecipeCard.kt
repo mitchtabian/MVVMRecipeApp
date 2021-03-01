@@ -43,7 +43,7 @@ fun RecipeCard(
                     contentDescription = "Recipe Featured Image",
                     modifier = Modifier
                         .fillMaxWidth()
-                        .preferredHeight(225.dp),
+                        .height(225.dp),
                     contentScale = ContentScale.Crop,
                 )
             }

@@ -32,10 +32,10 @@ android {
         useIR = true
     }
     composeOptions {
-        def kotlin_compiler_version = "1.4.21-2"
+        def kotlin_compiler_version = "1.4.30"
         kotlinCompilerVersion kotlin_compiler_version
 
-        def kotlin_compiler_extension_version = "1.0.0-alpha11"
+        def kotlin_compiler_extension_version = "1.0.0-beta01"
         kotlinCompilerExtensionVersion kotlin_compiler_extension_version
     }
     buildFeatures {
@@ -62,7 +62,7 @@ dependencies {
     def androidx_ui = "1.0.0-alpha07"
     implementation "androidx.ui:ui-tooling:$androidx_ui"
 
-    def compose = "1.0.0-alpha11"
+    def compose = "1.0.0-beta01"
     implementation "androidx.compose.ui:ui:$compose"
     implementation "androidx.compose.foundation:foundation:$compose"
     implementation "androidx.compose.runtime:runtime-livedata:$compose"
@@ -70,6 +70,12 @@ dependencies {
     implementation "androidx.compose.material:material:$compose"
     implementation "androidx.compose.material:material-icons-core:$compose"
     implementation "androidx.compose.material:material-icons-extended:$compose"
+
+    def compose_constraint = "1.0.0-alpha03"
+    implementation "androidx.constraintlayout:constraintlayout-compose:$compose_constraint"
+
+    def compose_activity = "1.3.0-alpha03"
+    implementation "androidx.activity:activity-compose:$compose_activity"
 
     def nav_version = "2.3.2"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"

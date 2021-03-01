@@ -1,8 +1,6 @@
 package com.codingwithmitch.mvvmrecipeapp.presentation.components
 
 import androidx.compose.animation.core.*
-import androidx.compose.animation.core.AnimationConstants.Infinite
-import androidx.compose.animation.transition
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -12,84 +10,56 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.codingwithmitch.mvvmrecipeapp.presentation.components.SwellAnimationDefinitions.SwellState.FIRST
-import com.codingwithmitch.mvvmrecipeapp.presentation.components.SwellAnimationDefinitions.SwellState.SECOND
-import com.codingwithmitch.mvvmrecipeapp.presentation.components.SwellAnimationDefinitions.swellDefinition
-import com.codingwithmitch.mvvmrecipeapp.presentation.components.SwellAnimationDefinitions.swellPropKey
-
-
-/**
- * This is not used in the project.
- */
-object SwellAnimationDefinitions {
-
-    enum class SwellState {
-        FIRST, SECOND,
-    }
-
-    val swellPropKey = FloatPropKey("swell_key")
-
-    val swellDefinition = transitionDefinition<SwellState> {
-        state(FIRST) { this[swellPropKey] = 0f }
-        state(SECOND) { this[swellPropKey] = 6f }
-
-        transition(
-            FIRST to SECOND,
-        ) {
-            swellPropKey using repeatable(
-                iterations =  Infinite,
-                animation = tween(
-                    durationMillis = 700,
-                    easing = LinearEasing
-                )
-            )
-        }
-    }
-}
 
 
 @Composable
 fun HorizontalDottedProgressBar() {
     val color = MaterialTheme.colors.primary
 
-    val swellAnim = transition(
-        definition = swellDefinition,
-        initState = FIRST,
-        toState = SECOND
+    val infiniteTransition = rememberInfiniteTransition()
+    val state = infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 6f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(
+                durationMillis = 700,
+                easing = LinearEasing
+            )
+        )
     )
 
-    val state = swellAnim[swellPropKey]
-
-    DrawCanvas(state = state, color = color)
+    DrawCanvas(state = state.value, radius = 15.dp, color = color)
 }
 
 
 @Composable
 fun DrawCanvas(
     state: Float,
+    radius: Dp,
     color: Color,
 ){
     Canvas(
         modifier = Modifier.fillMaxWidth().height(55.dp),
     ){
 
-        val radius = (4.dp).toIntPx().toFloat()
-        val padding = (6.dp).toIntPx().toFloat()
+        val radiusValue = radius.value
+        val padding = (radiusValue + (radiusValue * 0.5f))
 
         for(i in 1..5) {
             if(i-1 == state.toInt()){
                 drawCircle(
-                    radius = radius*2,
+                    radius = radiusValue*2,
                     brush = SolidColor(color),
-                    center = Offset(x = this.center.x + radius * 2 * (i-3)  + padding * (i-3), y = this.center.y)
+                    center = Offset(x = this.center.x + radiusValue * 2 * (i-3)  + padding * (i-3), y = this.center.y)
                 )
             }
             else{
                 drawCircle(
-                    radius = radius,
+                    radius = radiusValue,
                     brush = SolidColor(color),
-                    center = Offset(x = this.center.x + radius * 2 * (i-3) + padding * (i-3), y = this.center.y)
+                    center = Offset(x = this.center.x + radiusValue * 2 * (i-3) + padding * (i-3), y = this.center.y)
                 )
             }
         }

@@ -28,7 +28,8 @@ fun RecipeList(
         .background(color = MaterialTheme.colors.surface)
     ) {
         if (loading && recipes.isEmpty()) {
-            LoadingRecipeListShimmer(imageHeight = 250.dp,)
+            HorizontalDottedProgressBar()
+//            LoadingRecipeListShimmer(imageHeight = 250.dp,)
         }
         else if(recipes.isEmpty()){
             NothingHere()
