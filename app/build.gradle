@@ -35,7 +35,7 @@ android {
         def kotlin_compiler_version = "1.4.30"
         kotlinCompilerVersion kotlin_compiler_version
 
-        def kotlin_compiler_extension_version = "1.0.0-beta01"
+        def kotlin_compiler_extension_version = compose_version
         kotlinCompilerExtensionVersion kotlin_compiler_extension_version
     }
     buildFeatures {
@@ -48,36 +48,35 @@ android {
 dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.core:core-ktx:1.6.0'
 
-    def app_compat = "1.2.0"
+    def app_compat = "1.3.1"
     implementation "androidx.appcompat:appcompat:$app_compat"
 
-    def material = "1.2.1"
+    def material = "1.4.0"
     implementation "com.google.android.material:material:$material"
 
-    def constraint_layout = "2.0.4"
+    def constraint_layout = "2.1.0"
     implementation "androidx.constraintlayout:constraintlayout:$constraint_layout"
 
     def androidx_ui = "1.0.0-alpha07"
     implementation "androidx.ui:ui-tooling:$androidx_ui"
 
-    def compose = "1.0.0-beta01"
-    implementation "androidx.compose.ui:ui:$compose"
-    implementation "androidx.compose.foundation:foundation:$compose"
-    implementation "androidx.compose.runtime:runtime-livedata:$compose"
-    implementation "androidx.compose.runtime:runtime-rxjava2:$compose"
-    implementation "androidx.compose.material:material:$compose"
-    implementation "androidx.compose.material:material-icons-core:$compose"
-    implementation "androidx.compose.material:material-icons-extended:$compose"
+    implementation "androidx.compose.ui:ui:$compose_version"
+    implementation "androidx.compose.foundation:foundation:$compose_version"
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+    implementation "androidx.compose.runtime:runtime-rxjava2:$compose_version"
+    implementation "androidx.compose.material:material:$compose_version"
+    implementation "androidx.compose.material:material-icons-core:$compose_version"
+    implementation "androidx.compose.material:material-icons-extended:$compose_version"
 
-    def compose_constraint = "1.0.0-alpha03"
+    def compose_constraint = "1.0.0-beta02"
     implementation "androidx.constraintlayout:constraintlayout-compose:$compose_constraint"
 
-    def compose_activity = "1.3.0-alpha03"
+    def compose_activity = "1.3.1"
     implementation "androidx.activity:activity-compose:$compose_activity"
 
-    def nav_version = "2.3.2"
+    def nav_version = "2.3.5"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
@@ -85,11 +84,11 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit"
 
-    def hilt = "2.28-alpha"
+    def hilt = "2.37"
     implementation "com.google.dagger:hilt-android:$hilt"
     kapt "com.google.dagger:hilt-android-compiler:$hilt"
 
-    def hilt_lifecycle_viewmodel = "1.0.0-alpha01"
+    def hilt_lifecycle_viewmodel = "1.0.0-alpha03"
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_lifecycle_viewmodel"
     kapt "androidx.hilt:hilt-compiler:$hilt_lifecycle_viewmodel"
 
