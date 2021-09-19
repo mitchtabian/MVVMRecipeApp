@@ -14,7 +14,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Named
 
 const val PAGE_SIZE = 30
 
@@ -28,7 +27,6 @@ class RecipeListViewModel
 @Inject
 constructor(
     private val repository: RecipeRepository,
-    @Named("auth_token") private val token: String,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -60,19 +58,18 @@ constructor(
             setSelectedCategory(c)
         }
 
-        if(recipeListScrollPosition != 0){
+        if (recipeListScrollPosition != 0) {
             onTriggerEvent(RestoreStateEvent)
-        }
-        else{
+        } else {
             onTriggerEvent(NewSearchEvent)
         }
 
     }
 
-    fun onTriggerEvent(event: RecipeListEvent){
+    fun onTriggerEvent(event: RecipeListEvent) {
         viewModelScope.launch {
             try {
-                when(event){
+                when (event) {
                     is NewSearchEvent -> {
                         newSearch()
                     }
@@ -83,27 +80,25 @@ constructor(
                         restoreState()
                     }
                 }
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 Log.e(TAG, "launchJob: Exception: ${e}, ${e.cause}")
                 e.printStackTrace()
-            }
-            finally {
+            } finally {
                 Log.d(TAG, "launchJob: finally called.")
             }
         }
     }
 
-    private suspend fun restoreState(){
+    private suspend fun restoreState() {
         loading.value = true
         val results: MutableList<Recipe> = mutableListOf()
-        for(p in 1..page.value){
+        for (p in 1..page.value) {
             val result = repository.search(
-                token = token,
                 page = p,
                 query = query.value
             )
             results.addAll(result)
-            if(p == page.value){ // done
+            if (p == page.value) { // done
                 recipes.value = results
                 loading.value = false
             }
@@ -118,7 +113,6 @@ constructor(
         delay(2000)
 
         val result = repository.search(
-            token = token,
             page = 1,
             query = query.value
         )
@@ -127,9 +121,9 @@ constructor(
         loading.value = false
     }
 
-    private suspend fun nextPage(){
+    private suspend fun nextPage() {
         // prevent duplicate event due to recompose happening to quickly
-        if((recipeListScrollPosition + 1) >= (page.value * PAGE_SIZE) ){
+        if ((recipeListScrollPosition + 1) >= (page.value * PAGE_SIZE)) {
             loading.value = true
             incrementPage()
             Log.d(TAG, "nextPage: triggered: ${page.value}")
@@ -137,8 +131,8 @@ constructor(
             // just to show pagination, api is fast
             delay(1000)
 
-            if(page.value > 1){
-                val result = repository.search(token = token, page = page.value, query = query.value )
+            if (page.value > 1) {
+                val result = repository.search(page = page.value, query = query.value)
                 Log.d(TAG, "search: appending")
                 appendRecipes(result)
             }
@@ -149,17 +143,17 @@ constructor(
     /**
      * Append new recipes to the current list of recipes
      */
-    private fun appendRecipes(recipes: List<Recipe>){
+    private fun appendRecipes(recipes: List<Recipe>) {
         val current = ArrayList(this.recipes.value)
         current.addAll(recipes)
         this.recipes.value = current
     }
 
-    private fun incrementPage(){
+    private fun incrementPage() {
         setPage(page.value + 1)
     }
 
-    fun onChangeRecipeScrollPosition(position: Int){
+    fun onChangeRecipeScrollPosition(position: Int) {
         setListScrollPosition(position = position)
     }
 
@@ -188,22 +182,22 @@ constructor(
         onQueryChanged(category)
     }
 
-    private fun setListScrollPosition(position: Int){
+    private fun setListScrollPosition(position: Int) {
         recipeListScrollPosition = position
         savedStateHandle.set(STATE_KEY_LIST_POSITION, position)
     }
 
-    private fun setPage(page: Int){
+    private fun setPage(page: Int) {
         this.page.value = page
         savedStateHandle.set(STATE_KEY_PAGE, page)
     }
 
-    private fun setSelectedCategory(category: FoodCategory?){
+    private fun setSelectedCategory(category: FoodCategory?) {
         selectedCategory.value = category
         savedStateHandle.set(STATE_KEY_SELECTED_CATEGORY, category)
     }
 
-    private fun setQuery(query: String){
+    private fun setQuery(query: String) {
         this.query.value = query
         savedStateHandle.set(STATE_KEY_QUERY, query)
     }
