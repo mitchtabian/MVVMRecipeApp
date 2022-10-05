@@ -1,141 +1,70 @@
 package com.codingwithmitch.mvvmrecipeapp.presentation.components
 
-import androidx.compose.animation.ColorPropKey
-import androidx.compose.animation.DpPropKey
-import androidx.compose.animation.core.TransitionState
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.keyframes
-import androidx.compose.animation.core.transitionDefinition
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.transition
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
-import com.codingwithmitch.mvvmrecipeapp.R
-import com.codingwithmitch.mvvmrecipeapp.presentation.components.HeartAnimationDefinition.HeartButtonState.ACTIVE
-import com.codingwithmitch.mvvmrecipeapp.presentation.components.HeartAnimationDefinition.HeartButtonState.IDLE
-import com.codingwithmitch.mvvmrecipeapp.presentation.components.HeartAnimationDefinition.heartSize
-import com.codingwithmitch.mvvmrecipeapp.presentation.components.HeartAnimationDefinition.heartTransitionDefinition
-import com.codingwithmitch.mvvmrecipeapp.util.loadPicture
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+private val idleIconSize = 50.dp
+private val expandedIconSize = 60.dp
 
-@ExperimentalCoroutinesApi
 @Composable
-fun AnimatedHeartButton(
-    modifier: Modifier,
-    buttonState: MutableState<HeartAnimationDefinition.HeartButtonState>,
-    onToggle: () -> Unit,
-) {
+fun AnimatedHeartButton() {
+    var needLike by remember { mutableStateOf(true) }
+    val transition = updateTransition(targetState = needLike, label = "LikeTransition")
 
-    val toState = if (buttonState.value == IDLE) {
-        ACTIVE
-    } else {
-        IDLE
-    }
-
-    val state = transition(
-        definition = heartTransitionDefinition,
-        initState = buttonState.value,
-        toState = toState
-    )
-
-    HeartButton(
-        modifier = modifier,
-        buttonState = buttonState,
-        state = state,
-        onToggle = onToggle
-    )
-}
-
-@ExperimentalCoroutinesApi
-@Composable
-private fun HeartButton(
-    modifier: Modifier,
-    buttonState: MutableState<HeartAnimationDefinition.HeartButtonState>,
-    state: TransitionState,
-    onToggle: () -> Unit,
-) {
-    if (buttonState.value == ACTIVE) {
-        loadPicture(drawable = R.drawable.heart_red).value?.let { image ->
-            Image(
-                bitmap = image.asImageBitmap(),
-                modifier = modifier
-                    .clickable(
-                        onClick = onToggle,
-                        indication = null,
-                    )
-                    .width(state[heartSize])
-                    .height(state[heartSize])
-                ,
-            )
-        }
-    } else {
-        loadPicture(drawable = R.drawable.heart_grey).value?.let { image ->
-            Image(
-                bitmap = image.asImageBitmap(),
-                modifier = modifier
-                    .clickable(
-                        onClick = onToggle,
-                        indication = null,
-                    )
-                    .width(state[heartSize])
-                    .height(state[heartSize]),
-            )
-        }
-    }
-}
-
-
-object HeartAnimationDefinition{
-
-    enum class HeartButtonState {
-        IDLE, ACTIVE
-    }
-
-    val heartColor = ColorPropKey(label = "heartColor")
-    val heartSize = DpPropKey(label = "heartDp")
-
-    private val idleIconSize = 50.dp
-    private val expandedIconSize = 80.dp
-
-    val heartTransitionDefinition = transitionDefinition<HeartAnimationDefinition.HeartButtonState> {
-        state(IDLE) {
-            this[heartColor] = Color.LightGray
-            this[heartSize] = idleIconSize
-        }
-
-        state(ACTIVE) {
-            this[heartColor] = Color.Red
-            this[heartSize] = idleIconSize
-        }
-
-        transition(IDLE to ACTIVE) {
-            heartColor using tween(durationMillis = 500)
-
-            heartSize using keyframes {
-                durationMillis = 500
-                expandedIconSize at 100
-                idleIconSize at 200
+    val animatedSizeDp by transition.animateDp(label = "sizeTransition",
+        transitionSpec = {
+            keyframes {
+                durationMillis = 100
+                expandedIconSize at 50
+                idleIconSize at 100
             }
-        }
-
-        transition(ACTIVE to IDLE) {
-            heartColor using tween(durationMillis = 500)
-
-            heartSize using keyframes {
-                durationMillis = 500
-                expandedIconSize at 100
-                idleIconSize at 200
-            }
+        }) { needLike ->
+        //in both like and not like cases, heart will have same size, we just need the animation here.
+        if (needLike) {
+            idleIconSize
+        } else {
+            idleIconSize
         }
     }
+
+    val heartColor by transition.animateColor(
+        transitionSpec = { tween(100) }, label = "colorTransition"
+    ) { needLike ->
+        if (needLike) {//if heart is not liked, then it will have..
+            Color.Gray
+        } else {//if heart is already liked, then it will have..
+            Color.Red
+        }
+    }
+
+    Image(
+        modifier = Modifier
+            .size(animatedSizeDp)
+            .clickable(
+                interactionSource = remember {
+                    MutableInteractionSource()
+                },
+                indication = null,
+                onClick = { needLike = !needLike }
+            ),
+        imageVector = Icons.Default.Favorite,
+        contentDescription = "",
+        colorFilter = ColorFilter.tint(heartColor)
+    )
 }
 
 
